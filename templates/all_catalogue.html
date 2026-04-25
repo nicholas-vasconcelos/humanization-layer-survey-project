@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block title %}Catálogo Completo — Humanizing Choice{% endblock %}
+{% block progress %}0{% endblock %}
+
+{% block extra_style %}
+.all-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.8rem 2rem 5rem;
+}
+
+.all-header {
+  margin-bottom: 2rem;
+}
+
+.all-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.all-header p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.summary-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.6rem;
+}
+
+.summary-count {
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  color: var(--accent2);
+}
+
+.summary-caption {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.section-block {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.section-title h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.section-title span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.product-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(var(--accent2-rgb), 0.05);
+}
+
+.product-media {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  background: #eef2f8;
+  display: block;
+}
+
+.product-placeholder {
+  width: 100%;
+  height: 150px;
+  background: #eef2f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+}
+
+.product-body {
+  padding: 0.9rem 1rem 1rem;
+}
+
+.product-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.product-badge {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(var(--accent2-rgb), 0.28);
+  border-radius: 999px;
+  color: var(--accent2);
+  padding: 0.12rem 0.45rem;
+}
+
+.product-name {
+  font-family: var(--font-head);
+  font-size: 1.02rem;
+  line-height: 1.25;
+  margin-bottom: 0.45rem;
+  min-height: 2.5rem;
+}
+
+.product-desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  font-family: var(--font-head);
+  font-size: 1.12rem;
+  color: var(--accent2);
+}
+
+@media (max-width: 700px) {
+  .all-page {
+    padding: 2rem 1rem 4rem;
+  }
+}
+{% endblock %}
+
+{% block content %}
+<div class="all-page">
+  <div class="all-header fade-up">
+    <div class="eyebrow">Apresentação do Catálogo</div>
+    <h2>Catálogo completo de produtos</h2>
+    <p>Visualização unificada de todos os itens disponíveis para demonstração.</p>
+  </div>
+
+  <div class="summary-strip fade-up delay-1">
+    <div>
+      <div class="summary-caption">Total de itens</div>
+      <div class="summary-count">{{ total_products }} produtos</div>
+    </div>
+    <a class="btn btn-ghost" href="{% url 'landing' %}">Voltar para a página inicial</a>
+  </div>
+
+  {% regroup products by catalogue as grouped_products %}
+  {% for group in grouped_products %}
+    <section class="section-block fade-up delay-2">
+      <div class="section-title">
+        <h3>{{ group.grouper.name }}</h3>
+        <span>{{ group.list|length }} itens</span>
+      </div>
+
+      <div class="product-grid">
+        {% for product in group.list %}
+          <article class="product-card">
+            {% if product.image_url %}
+              <img class="product-media" src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="product-placeholder" style="display:none;">📦</div>
+            {% else %}
+              <div class="product-placeholder">📦</div>
+            {% endif %}
+
+            <div class="product-body">
+              <div class="product-top">
+                {% if product.featured %}
+                  <span class="product-badge">Destaque</span>
+                {% endif %}
+              </div>
+              <div class="product-name">{{ product.name }}</div>
+              <div class="product-desc">{{ product.description }}</div>
+              <div class="product-price">R$ {{ product.price }}</div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+</div>
+{% endblock %}

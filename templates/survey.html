@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Pesquisa — Humanizing Choice{% endblock %}
+{% block progress %}82{% endblock %}
+
+{% block extra_style %}
+.survey-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 6rem;
+}
+
+.survey-header { margin-bottom: 2.5rem; }
+.survey-header h2 { margin-bottom: 0.5rem; }
+.survey-header p  { color: var(--muted); }
+
+.survey-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.question-block { margin-bottom: 1.75rem; }
+
+.question-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.option-group {
+  display: flex; gap: 0.75rem; flex-wrap: wrap;
+}
+
+.option-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.option-btn:hover {
+  border-color: rgba(var(--accent2-rgb), 0.35);
+  color: var(--text);
+}
+
+.option-btn.active {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: rgba(var(--accent2-rgb), 0.08);
+}
+
+.hidden-input { display: none; }
+
+.submit-wrap { margin-top: 2rem; }
+
+.submit-wrap .btn-primary {
+  width: 100%;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 1rem;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.2s;
+}
+
+.submit-wrap .btn-primary.ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+{% endblock %}
+
+{% block content %}
+<div class="survey-page">
+  <div class="survey-header fade-up">
+    <div class="eyebrow">Passo 4 de 4 · Última etapa</div>
+    <h2>Sua Avaliação</h2>
+    <p>Todas as respostas são de toque — nenhuma digitação necessária.</p>
+  </div>
+
+  <form method="POST" action="{% url 'survey' %}" id="surveyForm">
+    {% csrf_token %}
+
+    <!-- Section 1: Direct comparison -->
+    <div class="survey-section fade-up delay-1">
+      <div class="section-title">Seção 1 — Comparação Direta</div>
+
+      <div class="question-block">
+        <div class="question-label">1. Qual recomendação você prefere no geral?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn {% if preferred_initial == 'A' %}active{% endif %}"
+                  onclick="pick(this, 'preferred_overall', 'A')">Recomendação A</button>
+          <button type="button" class="option-btn {% if preferred_initial == 'B' %}active{% endif %}"
+                  onclick="pick(this, 'preferred_overall', 'B')">Recomendação B</button>
+        </div>
+        <input type="hidden" name="preferred_overall" id="preferred_overall"
+               value="{{ preferred_initial|default:'' }}" class="hidden-input">
+      </div>
+
+      <div class="question-block">
+        <div class="question-label">2. Qual recomendação pareceu mais confiável?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'A')">Recomendação A</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'B')">Recomendação B</button>
+        </div>
+        <input type="hidden" name="preferred_trust" id="preferred_trust" value="" class="hidden-input">
+      </div>
+
+      <div class="question-block">
+        <div class="question-label">3. Qual te deixou mais propenso(a) a comprar?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'A')">Recomendação A</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'B')">Recomendação B</button>
+        </div>
+        <input type="hidden" name="preferred_purchase" id="preferred_purchase" value="" class="hidden-input">
+      </div>
+
+      <div class="question-block">
+        <div class="question-label">4. Qual te fez sentir mais compreendido(a)?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'A')">Recomendação A</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'B')">Recomendação B</button>
+        </div>
+        <input type="hidden" name="preferred_understood" id="preferred_understood" value="" class="hidden-input">
+      </div>
+    </div>
+
+    <!-- Section 2: Participant profile -->
+    <div class="survey-section fade-up delay-2">
+      <div class="section-title">Seção 2 — Perfil do Participante</div>
+
+      <div class="question-block">
+        <div class="question-label">5. Você costuma usar IA para decisões de compra?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'sim')">Sim</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'nao')">Não</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'as_vezes')">Às vezes</button>
+        </div>
+        <input type="hidden" name="uses_ai_shopping" id="uses_ai_shopping" value="" class="hidden-input">
+      </div>
+
+      <div class="question-block">
+        <div class="question-label">6. Como você avalia seu nível de familiaridade com IA?</div>
+        <div class="option-group">
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'nenhuma')">Nenhuma</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'pouca')">Pouca</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'moderada')">Moderada</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'alta')">Alta</button>
+        </div>
+        <input type="hidden" name="ai_familiarity" id="ai_familiarity" value="" class="hidden-input">
+      </div>
+    </div>
+
+    <div class="submit-wrap fade-up delay-3">
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        Enviar Respostas
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const required = ['preferred_overall','preferred_trust','preferred_purchase','preferred_understood','uses_ai_shopping','ai_familiarity'];
+
+  function pick(btn, field, value) {
+    // Deactivate siblings
+    btn.closest('.option-group').querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(field).value = value;
+    checkReady();
+  }
+
+  function checkReady() {
+    const allFilled = required.every(f => document.getElementById(f).value !== '');
+    document.getElementById('submitBtn').classList.toggle('ready', allFilled);
+  }
+
+  // Pre-fill preferred_overall if passed from recommendations page
+  const preField = document.getElementById('preferred_overall');
+  if (preField.value) {
+    const matchBtn = document.querySelector(`[onclick*="preferred_overall, '${preField.value}'"]`);
+    if (matchBtn) matchBtn.classList.add('active');
+  }
+
+  checkReady();
+</script>
+{% endblock %}

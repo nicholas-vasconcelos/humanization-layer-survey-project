@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Obrigado — Humanizing Choice{% endblock %}
+{% block progress %}100{% endblock %}
+
+{% block extra_style %}
+.thanks-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.thanks-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.5s ease both;
+}
+
+.thanks-page h2 {
+  margin-bottom: 1rem;
+  animation: fadeUp 0.5s ease 0.1s both;
+  opacity: 0;
+}
+
+.thanks-page .subtitle {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  animation: fadeUp 0.5s ease 0.2s both;
+  opacity: 0;
+}
+
+.reveal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: left;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.5s ease 0.3s both;
+  opacity: 0;
+}
+
+.reveal-card h3 {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.reveal-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 0.75rem;
+}
+
+.reveal-card p:last-child { margin-bottom: 0; }
+
+.framework-pills {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.framework-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.framework-pill strong { color: var(--accent); font-weight: 600; }
+
+.restart-wrap {
+  animation: fadeUp 0.5s ease 0.45s both;
+  opacity: 0;
+}
+{% endblock %}
+
+{% block content %}
+<div class="thanks-page">
+  <div class="thanks-icon">✓</div>
+
+  <h2>Sua resposta foi registrada!</h2>
+  <p class="subtitle">Muito obrigado(a) por participar desta pesquisa.</p>
+
+  <div class="reveal-card">
+    <h3>Sobre o experimento</h3>
+    <p>
+      Você acabou de interagir com dois sistemas de recomendação baseados no mesmo modelo de IA — <strong>llama-8B</strong> — alimentados com os mesmos produtos. A única diferença entre eles foi a estrutura do <em>prompt</em>.
+    </p>
+    <p>
+      A <strong>Recomendação A</strong> usou um prompt deliberadamente restritivo, que instrui a IA a retornar apenas três produtos num formato fixo, sem texto adicional — simulando um motor de recomendação convencional.
+    </p>
+    <p>
+      A <strong>Recomendação B</strong> ativou o <em>Humanization Framework</em> proposto nesta pesquisa: um conjunto estruturado de cinco componentes — Persona, Empatia, Recomendação, Prova Social e Chamada à Ação — projetados para injetar características antropomórficas no output da IA.
+    </p>
+
+    <div class="framework-pills">
+      <span class="framework-pill"><strong>1</strong> Persona (Maya)</span>
+      <span class="framework-pill"><strong>2</strong> Frase de Empatia</span>
+      <span class="framework-pill"><strong>3</strong> Recomendação</span>
+      <span class="framework-pill"><strong>4</strong> Prova Social</span>
+      <span class="framework-pill"><strong>5</strong> Chamada à Ação</span>
+    </div>
+
+    <p style="margin-top: 1.25rem;">
+      Suas respostas nos ajudarão a mensurar se — e em que dimensões — essa camada de humanização afeta a percepção de confiança, utilidade e intenção de compra em estudantes universitários de tecnologia.
+    </p>
+  </div>
+
+  <div class="restart-wrap">
+    <a href="{% url 'landing' %}" class="btn btn-ghost">
+      Voltar ao início
+    </a>
+  </div>
+</div>
+{% endblock %}

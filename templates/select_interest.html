@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Escolha seu Interesse — Humanizing Choice{% endblock %}
+{% block progress %}20{% endblock %}
+
+{% block extra_style %}
+.select-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+.select-header {
+  margin-bottom: 3rem;
+}
+
+.select-header h2 {
+  margin-bottom: 0.75rem;
+}
+
+.select-header p {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.interest-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.interest-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-glow, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.interest-card:hover {
+  border-color: var(--card-accent, var(--accent));
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(var(--accent2-rgb), 0.14);
+}
+
+.interest-card:hover::before { opacity: 1; }
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.25rem;
+  display: block;
+}
+
+.interest-card h3 {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.interest-card p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 1.5rem; right: 1.5rem;
+  width: 32px; height: 32px;
+  background: var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.interest-card:hover .card-arrow {
+  background: var(--card-accent, var(--accent));
+  transform: translateX(3px);
+}
+
+.interest-card:hover .card-arrow svg { color: #ffffff; }
+
+/* Individual card accent colours */
+.card-dev   { --card-accent: var(--accent2); --card-glow: radial-gradient(ellipse at top left, rgba(var(--accent2-rgb), 0.12), transparent 70%); }
+.card-games { --card-accent: #1f4c83; --card-glow: radial-gradient(ellipse at top left, rgba(31,76,131,0.11), transparent 70%); }
+.card-study { --card-accent: #2c5f90; --card-glow: radial-gradient(ellipse at top left, rgba(44,95,144,0.11), transparent 70%); }
+.card-audio { --card-accent: var(--accent); --card-glow: radial-gradient(ellipse at top left, rgba(var(--accent-rgb), 0.16), transparent 72%); }
+{% endblock %}
+
+{% block content %}
+<div class="select-page">
+  <div class="select-header fade-up">
+    <div class="eyebrow">Passo 1 de 4</div>
+    <h2>Qual é a sua área de interesse em tecnologia?</h2>
+    <p>Sua escolha determina quais produtos aparecerão no catálogo.</p>
+  </div>
+
+  <div class="interest-grid">
+    <a href="{% url 'catalogue' %}?slug=programacao-desenvolvimento"
+       class="interest-card card-dev fade-up delay-1"
+       onclick="setInterest('programacao-desenvolvimento')">
+      <span class="card-icon">💻</span>
+      <h3>Programação & Desenvolvimento</h3>
+      <p>Monitores, teclados mecânicos, SSDs, periféricos e equipamentos para devs.</p>
+      <div class="card-arrow">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <a href="{% url 'catalogue' %}?slug=games-performance"
+       class="interest-card card-games fade-up delay-2"
+       onclick="setInterest('games-performance')">
+      <span class="card-icon">🎮</span>
+      <h3>Games & Performance</h3>
+      <p>GPUs, monitores de alta taxa de atualização, headsets e periféricos gamer.</p>
+      <div class="card-arrow">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <a href="{% url 'catalogue' %}?slug=produtividade-estudos"
+       class="interest-card card-study fade-up delay-3"
+       onclick="setInterest('produtividade-estudos')">
+      <span class="card-icon">📚</span>
+      <h3>Produtividade & Estudos</h3>
+      <p>Tablets, notebooks leves, e-readers, webcams e acessórios para estudar.</p>
+      <div class="card-arrow">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <a href="{% url 'catalogue' %}?slug=audio-comunicacao"
+       class="interest-card card-audio fade-up delay-4"
+       onclick="setInterest('audio-comunicacao')">
+      <span class="card-icon">🎧</span>
+      <h3>Áudio & Comunicação</h3>
+      <p>Microfones, fones de ouvido, interfaces de áudio e câmeras para reuniões.</p>
+      <div class="card-arrow">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script>
+  // Store the slug in sessionStorage so the catalogue page can read it
+  function setInterest(slug) {
+    sessionStorage.setItem('interest_slug', slug);
+  }
+
+  // Also handle the POST submission via the Django view
+  document.querySelectorAll('.interest-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      e.preventDefault();
+      const slug = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = "{% url 'select_interest' %}";
+      const csrf = document.createElement('input');
+      csrf.type = 'hidden';
+      csrf.name = 'csrfmiddlewaretoken';
+      csrf.value = '{{ csrf_token }}';
+      const slugInput = document.createElement('input');
+      slugInput.type = 'hidden';
+      slugInput.name = 'slug';
+      slugInput.value = slug;
+      form.appendChild(csrf);
+      form.appendChild(slugInput);
+      document.body.appendChild(form);
+      form.submit();
+    });
+  });
+</script>
+{% endblock %}

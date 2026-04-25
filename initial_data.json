@@ -1,0 +1,818 @@
+[
+  {
+    "model": "produtos.catalogue",
+    "pk": 1,
+    "fields": {
+      "name": "Programação & Desenvolvimento",
+      "slug": "programacao-desenvolvimento",
+      "description": "Equipamentos e acessórios para desenvolvedores e programadores."
+    }
+  },
+  {
+    "model": "produtos.catalogue",
+    "pk": 2,
+    "fields": {
+      "name": "Games & Performance",
+      "slug": "games-performance",
+      "description": "Hardware e periféricos para gamers e entusiastas de alta performance."
+    }
+  },
+  {
+    "model": "produtos.catalogue",
+    "pk": 3,
+    "fields": {
+      "name": "Produtividade & Estudos",
+      "slug": "produtividade-estudos",
+      "description": "Tecnologia para aumentar sua produtividade e organizar seus estudos."
+    }
+  },
+  {
+    "model": "produtos.catalogue",
+    "pk": 4,
+    "fields": {
+      "name": "Áudio & Comunicação",
+      "slug": "audio-comunicacao",
+      "description": "Fones, microfones e equipamentos de áudio para estudo e trabalho."
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 1,
+    "fields": {
+      "catalogue": 1,
+      "name": "Monitor LG UltraWide 34\" WQHD",
+      "description": "Monitor ultrawide 34 polegadas com resolução WQHD (3440x1440), ideal para múltiplas janelas e ambientes de desenvolvimento.",
+      "price": "2899.00",
+      "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400",
+      "featured": true,
+      "brand": "LG",
+      "item_type": "monitor",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 2,
+    "fields": {
+      "catalogue": 1,
+      "name": "Teclado Mecânico Keychron K2 Pro",
+      "description": "Teclado mecânico compacto 75%, switches Red, compatível com macOS e Windows, iluminação RGB.",
+      "price": "459.00",
+      "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+      "featured": true,
+      "brand": "Keychron",
+      "item_type": "teclado",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 3,
+    "fields": {
+      "catalogue": 1,
+      "name": "SSD Samsung 970 EVO Plus 1TB NVMe",
+      "description": "SSD NVMe M.2 com leituras de até 3.500 MB/s. Ideal para reduzir o tempo de build e rodar ambientes virtuais.",
+      "price": "389.00",
+      "image_url": "https://images.unsplash.com/photo-1597852074816-d933c7d2b988?w=400",
+      "featured": false,
+      "brand": "Samsung",
+      "item_type": "ssd",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 4,
+    "fields": {
+      "catalogue": 1,
+      "name": "Notebook Dell XPS 15 (Intel i7, 16GB RAM)",
+      "description": "Laptop premium com tela OLED 15.6\", processador Intel Core i7 de 13ª geração e 16GB de RAM DDR5.",
+      "price": "8499.00",
+      "image_url": "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400",
+      "featured": true,
+      "brand": "Dell",
+      "item_type": "notebook",
+      "price_tier": "high-end"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 5,
+    "fields": {
+      "catalogue": 1,
+      "name": "Mouse Logitech MX Master 3S",
+      "description": "Mouse ergonômico para produtividade com scroll eletromagnético MagSpeed e conectividade Bluetooth + USB.",
+      "price": "499.00",
+      "image_url": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+      "featured": false,
+      "brand": "Logitech",
+      "item_type": "mouse",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 6,
+    "fields": {
+      "catalogue": 1,
+      "name": "Dock Station Thunderbolt 4 Belkin",
+      "description": "Hub Thunderbolt 4 com 11 portas: HDMI, USB-A, USB-C, SD Card e Ethernet. Carregamento 90W para o notebook.",
+      "price": "1299.00",
+      "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+      "featured": false,
+      "brand": "Belkin",
+      "item_type": "hub",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 7,
+    "fields": {
+      "catalogue": 1,
+      "name": "Memória RAM Kingston Fury 32GB DDR5",
+      "description": "Kit de memória RAM DDR5 32GB (2x16GB) 5600MHz. Essencial para rodar múltiplas máquinas virtuais ou containers Docker.",
+      "price": "649.00",
+      "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400",
+      "featured": false,
+      "brand": "Kingston",
+      "item_type": "memoria",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 8,
+    "fields": {
+      "catalogue": 1,
+      "name": "Suporte de Monitor Ergotron LX",
+      "description": "Braço articulado de mesa para monitores de até 34\". Permite ajuste total de altura, inclinação e rotação.",
+      "price": "699.00",
+      "image_url": "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?w=400",
+      "featured": false,
+      "brand": "Ergotron",
+      "item_type": "suporte",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 9,
+    "fields": {
+      "catalogue": 1,
+      "name": "Raspberry Pi 5 (8GB RAM)",
+      "description": "Microcomputador de placa única com 8GB de RAM e processador quad-core 64-bit 2.4GHz. Ótimo para projetos e aprendizado.",
+      "price": "349.00",
+      "image_url": "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400",
+      "featured": false,
+      "brand": "Raspberry Pi",
+      "item_type": "microcomputer",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 10,
+    "fields": {
+      "catalogue": 1,
+      "name": "Cadeira Gamer DXRacer Formula",
+      "description": "Cadeira ergonômica com apoio lombar e de pescoço, revestimento em couro PU e estrutura de aço. Suporta até 150kg.",
+      "price": "1599.00",
+      "image_url": "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400",
+      "featured": false,
+      "brand": "DXRacer",
+      "item_type": "cadeira",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 11,
+    "fields": {
+      "catalogue": 2,
+      "name": "Placa de Vídeo RTX 4070 Super",
+      "description": "GPU NVIDIA GeForce RTX 4070 Super com 12GB GDDR6X, suporte a ray tracing e DLSS 3. Ideal para 1440p e 4K.",
+      "price": "3799.00",
+      "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400",
+      "featured": true,
+      "brand": "NVIDIA",
+      "item_type": "gpu",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 12,
+    "fields": {
+      "catalogue": 2,
+      "name": "Monitor Gamer ASUS ROG 27\" 165Hz QHD",
+      "description": "Monitor IPS 27\", resolução QHD (2560x1440), 165Hz, 1ms de resposta. HDR400 e FreeSync Premium Pro.",
+      "price": "2199.00",
+      "image_url": "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=400",
+      "featured": true,
+      "brand": "ASUS",
+      "item_type": "monitor",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 13,
+    "fields": {
+      "catalogue": 2,
+      "name": "Mouse Gamer Razer DeathAdder V3",
+      "description": "Mouse gamer óptico 30.000 DPI, formato ergonômico, botões com até 90 milhões de cliques. Conexão com fio.",
+      "price": "349.00",
+      "image_url": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+      "featured": false,
+      "brand": "Razer",
+      "item_type": "mouse",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 14,
+    "fields": {
+      "catalogue": 2,
+      "name": "Headset Gamer HyperX Cloud III",
+      "description": "Headset com drivers de 53mm, microfone com cancelamento de ruído destacável e almofadas de espuma viscoelástica.",
+      "price": "599.00",
+      "image_url": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400",
+      "featured": true,
+      "brand": "HyperX",
+      "item_type": "headset",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 15,
+    "fields": {
+      "catalogue": 2,
+      "name": "Teclado Gamer Corsair K70 RGB Pro",
+      "description": "Teclado mecânico gamer tamanho completo, switches Cherry MX Red, iluminação RGB por tecla e cabo USB-C destacável.",
+      "price": "799.00",
+      "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+      "featured": false,
+      "brand": "Corsair",
+      "item_type": "teclado",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 16,
+    "fields": {
+      "catalogue": 2,
+      "name": "Controle Xbox Series X sem fio",
+      "description": "Controle oficial Microsoft com trigger haptics, texturas antiderrapantes, conexão Bluetooth e USB-C. Compatível com PC.",
+      "price": "429.00",
+      "image_url": "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400",
+      "featured": false,
+      "brand": "Microsoft",
+      "item_type": "controller",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 17,
+    "fields": {
+      "catalogue": 2,
+      "name": "Processador AMD Ryzen 7 7800X3D",
+      "description": "CPU de 8 núcleos e 16 threads com tecnologia 3D V-Cache. Melhor processador para jogos no segmento AM5.",
+      "price": "1899.00",
+      "image_url": "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400",
+      "featured": true,
+      "brand": "AMD",
+      "item_type": "processador",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 18,
+    "fields": {
+      "catalogue": 2,
+      "name": "Cadeira Gamer SecretLab Titan Evo",
+      "description": "Cadeira premium com suporte lombar magnético ajustável, apoio de cabeça 4D e tecido SoftWeave Plus respirável.",
+      "price": "3299.00",
+      "image_url": "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400",
+      "featured": false,
+      "brand": "SecretLab",
+      "item_type": "cadeira",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 19,
+    "fields": {
+      "catalogue": 2,
+      "name": "SSD NVMe WD Black SN850X 2TB",
+      "description": "SSD M.2 NVMe Gen4 com 7.300 MB/s de leitura. Aprovado para PlayStation 5 e ideal para encurtar tempos de loading.",
+      "price": "799.00",
+      "image_url": "https://images.unsplash.com/photo-1597852074816-d933c7d2b988?w=400",
+      "featured": false,
+      "brand": "WD",
+      "item_type": "ssd",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 20,
+    "fields": {
+      "catalogue": 2,
+      "name": "Mousepad Gamer Steelseries QcK XXL",
+      "description": "Mousepad extra grande 900x400mm, superfície micro-texturizada otimizada para sensores ópticos, base de borracha antiderrapante.",
+      "price": "189.00",
+      "image_url": "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400",
+      "featured": false,
+      "brand": "SteelSeries",
+      "item_type": "mousepad",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 21,
+    "fields": {
+      "catalogue": 3,
+      "name": "iPad Pro 11\" M4 com Apple Pencil",
+      "description": "Tablet com chip M4, tela Liquid Retina XDR, Wi-Fi 6E e suporte ao Apple Pencil Pro. Ótimo para anotações e leitura.",
+      "price": "9299.00",
+      "image_url": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400",
+      "featured": true,
+      "brand": "Apple",
+      "item_type": "other",
+      "price_tier": "high-end"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 22,
+    "fields": {
+      "catalogue": 3,
+      "name": "Notebook Samsung Galaxy Book4 Pro",
+      "description": "Laptop ultrafino com tela AMOLED 14\", Intel Core Ultra 7, 16GB RAM e autonomia de até 17h. Leve e portátil.",
+      "price": "5799.00",
+      "image_url": "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400",
+      "featured": true,
+      "brand": "Samsung",
+      "item_type": "notebook",
+      "price_tier": "high-end"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 23,
+    "fields": {
+      "catalogue": 3,
+      "name": "Kindle Paperwhite 16GB",
+      "description": "E-reader com tela de 6.8\", retroiluminação ajustável com luz quente, resistência à água IPX8 e 16GB de armazenamento.",
+      "price": "549.00",
+      "image_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+      "featured": false,
+      "brand": "Amazon",
+      "item_type": "ereader",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 24,
+    "fields": {
+      "catalogue": 3,
+      "name": "Teclado Bluetooth Logitech MX Keys Mini",
+      "description": "Teclado compacto retroiluminado com teclas côncavas de digitação precisa. Conecta até 3 dispositivos simultaneamente.",
+      "price": "599.00",
+      "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+      "featured": false,
+      "brand": "Logitech",
+      "item_type": "teclado",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 25,
+    "fields": {
+      "catalogue": 3,
+      "name": "Webcam Logitech StreamCam Full HD",
+      "description": "Webcam 1080p/60fps com autofoco por IA, correção de luz automática e microfone stereo integrado. Conexão USB-C.",
+      "price": "599.00",
+      "image_url": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400",
+      "featured": false,
+      "brand": "Logitech",
+      "item_type": "webcam",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 26,
+    "fields": {
+      "catalogue": 3,
+      "name": "Luminária de Mesa BenQ ScreenBar Halo",
+      "description": "Luminária LED de monitor com retroiluminação para reduzir brilho da tela. Controle tátil e sensor de luz ambiente.",
+      "price": "849.00",
+      "image_url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+      "featured": false,
+      "brand": "BenQ",
+      "item_type": "luminaria",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 27,
+    "fields": {
+      "catalogue": 3,
+      "name": "Mochila para Notebook Samsonite Guardit 2.0",
+      "description": "Mochila resistente à água com compartimento acolchoado para notebooks de até 15.6\", porta USB externa e alça para trolley.",
+      "price": "399.00",
+      "image_url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+      "featured": false,
+      "brand": "Samsonite",
+      "item_type": "mochila",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 28,
+    "fields": {
+      "catalogue": 3,
+      "name": "Carregador USB-C 100W Anker Nano",
+      "description": "Carregador compacto GaN 100W com 4 portas (2x USB-C, 2x USB-A). Carrega notebook, tablet e smartphone ao mesmo tempo.",
+      "price": "289.00",
+      "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+      "featured": false,
+      "brand": "Anker",
+      "item_type": "carregador",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 29,
+    "fields": {
+      "catalogue": 3,
+      "name": "Monitor Portátil ASUS ZenScreen 15.6\" FHD",
+      "description": "Monitor secundário portátil 15.6\" IPS Full HD. Conecta via USB-C com um único cabo. Capa protetora funciona como suporte.",
+      "price": "1199.00",
+      "image_url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400",
+      "featured": true,
+      "brand": "ASUS",
+      "item_type": "monitor",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 30,
+    "fields": {
+      "catalogue": 3,
+      "name": "Fone Noise-Cancelling Sony WH-1000XM5",
+      "description": "Headphone over-ear com cancelamento de ruído líder de mercado, até 30h de bateria e qualidade de chamada com IA.",
+      "price": "1799.00",
+      "image_url": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400",
+      "featured": false,
+      "brand": "Sony",
+      "item_type": "fone",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 31,
+    "fields": {
+      "catalogue": 4,
+      "name": "Interface de Áudio Focusrite Scarlett Solo",
+      "description": "Interface USB de 2 canais (1 mic XLR + 1 instrumento) com pré-amp de alta qualidade. Essencial para gravação e podcast.",
+      "price": "699.00",
+      "image_url": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400",
+      "featured": true,
+      "brand": "Focusrite",
+      "item_type": "audio_interface",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 32,
+    "fields": {
+      "catalogue": 4,
+      "name": "Microfone Blue Yeti USB",
+      "description": "Microfone condensador USB com 4 padrões polares (cardióide, bidirecional, omnidirecional e estéreo). Plug-and-play.",
+      "price": "799.00",
+      "image_url": "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400",
+      "featured": true,
+      "brand": "Blue",
+      "item_type": "microfone",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 33,
+    "fields": {
+      "catalogue": 4,
+      "name": "Fone Sony WH-1000XM5",
+      "description": "Headphone over-ear com o melhor cancelamento de ruído da categoria, codec LDAC Hi-Res e até 30 horas de bateria.",
+      "price": "1799.00",
+      "image_url": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400",
+      "featured": true,
+      "brand": "Sony",
+      "item_type": "fone",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 34,
+    "fields": {
+      "catalogue": 4,
+      "name": "Fone In-Ear Apple AirPods Pro 2",
+      "description": "Earbuds com cancelamento ativo de ruído adaptativo, áudio espacial personalizado e case MagSafe. Chip H2.",
+      "price": "1699.00",
+      "image_url": "https://images.unsplash.com/photo-1603351154351-5e2d0600bb77?w=400",
+      "featured": false,
+      "brand": "Apple",
+      "item_type": "fone",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 35,
+    "fields": {
+      "catalogue": 4,
+      "name": "Câmera Logitech Brio 4K",
+      "description": "Webcam 4K com HDR, autofoco por IA e campo de visão de 90°. Ideal para videoconferências profissionais.",
+      "price": "1399.00",
+      "image_url": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400",
+      "featured": false,
+      "brand": "Logitech",
+      "item_type": "webcam",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 36,
+    "fields": {
+      "catalogue": 4,
+      "name": "Caixa de Som JBL Charge 5",
+      "description": "Caixa Bluetooth portátil com 20h de bateria, IP67 à prova d'água, powerbank integrado e som 360° com graves profundos.",
+      "price": "799.00",
+      "image_url": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
+      "featured": false,
+      "brand": "JBL",
+      "item_type": "caixa_de_som",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 37,
+    "fields": {
+      "catalogue": 4,
+      "name": "Mixer de Streaming RØDE RØDECaster Pro II",
+      "description": "Console de produção de podcast/streaming com 4 entradas XLR, efeitos de voz, pads de som e integração USB-C.",
+      "price": "3499.00",
+      "image_url": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400",
+      "featured": false,
+      "brand": "RØDE",
+      "item_type": "mixer",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 38,
+    "fields": {
+      "catalogue": 4,
+      "name": "Headset com Fio Jabra Evolve2 55",
+      "description": "Headset com cancelamento de ruído híbrido em 6 microfones, certificado Microsoft Teams e bateria de 36h.",
+      "price": "1999.00",
+      "image_url": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400",
+      "featured": false,
+      "brand": "Jabra",
+      "item_type": "headset",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 39,
+    "fields": {
+      "catalogue": 4,
+      "name": "Microfone Lapela sem Fio DJI Mic 2",
+      "description": "Sistema de microfone lapela sem fio com transmissores compactos, gravação interna de backup e conexão USB-C/Lightning.",
+      "price": "1499.00",
+      "image_url": "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400",
+      "featured": true,
+      "brand": "DJI",
+      "item_type": "microfone",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 40,
+    "fields": {
+      "catalogue": 4,
+      "name": "DAC/Amp FiiO K7 para Fones de Ouvido",
+      "description": "Conversor digital-analógico e amplificador de mesa com chip ES9068AS, saídas XLR balanceadas e P2 de 6.35mm.",
+      "price": "1299.00",
+      "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+      "featured": false,
+      "brand": "FiiO",
+      "item_type": "dac",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 41,
+    "fields": {
+      "catalogue": 1,
+      "name": "Mini PC Intel NUC 13 Pro",
+      "description": "Computador compacto com Intel Core i7, 32GB de RAM e SSD NVMe. Ideal para ambiente de desenvolvimento em espaços reduzidos.",
+      "price": "4199.00",
+      "image_url": "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400",
+      "featured": false,
+      "brand": "Intel",
+      "item_type": "microcomputer",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 42,
+    "fields": {
+      "catalogue": 1,
+      "name": "Hub USB-C UGREEN 9 em 1",
+      "description": "Adaptador multiportas com HDMI 4K, leitor SD, USB-A e Ethernet. Expande a conectividade de notebooks modernos.",
+      "price": "329.00",
+      "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+      "featured": false,
+      "brand": "UGREEN",
+      "item_type": "hub",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 43,
+    "fields": {
+      "catalogue": 1,
+      "name": "Mesa Digitalizadora Wacom One",
+      "description": "Mesa com caneta sensível à pressão para desenho técnico, fluxos de UX/UI e anotações de arquitetura de software.",
+      "price": "1199.00",
+      "image_url": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400",
+      "featured": false,
+      "brand": "Wacom",
+      "item_type": "digitizer",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 44,
+    "fields": {
+      "catalogue": 2,
+      "name": "Console PlayStation 5 Slim",
+      "description": "Console de última geração com SSD ultrarrápido e ray tracing, ótimo para jogos competitivos e single-player em alta fidelidade.",
+      "price": "4299.00",
+      "image_url": "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400",
+      "featured": true,
+      "brand": "Sony",
+      "item_type": "console",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 45,
+    "fields": {
+      "catalogue": 2,
+      "name": "Memória RAM Corsair Vengeance 32GB DDR5",
+      "description": "Kit 2x16GB DDR5 6000MHz com dissipador térmico, indicado para jogos atuais e multitarefa pesada.",
+      "price": "739.00",
+      "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400",
+      "featured": false,
+      "brand": "Corsair",
+      "item_type": "memoria",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 46,
+    "fields": {
+      "catalogue": 2,
+      "name": "Water Cooler NZXT Kraken 240",
+      "description": "Sistema de refrigeração líquida de 240mm com ventoinhas PWM e controle inteligente de temperatura.",
+      "price": "999.00",
+      "image_url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400",
+      "featured": false,
+      "brand": "NZXT",
+      "item_type": "cooling",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 47,
+    "fields": {
+      "catalogue": 3,
+      "name": "Smartphone Samsung Galaxy S24",
+      "description": "Smartphone premium com tela AMOLED 120Hz e câmera tripla, útil para estudos, produtividade e captação de conteúdo.",
+      "price": "4999.00",
+      "image_url": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+      "featured": true,
+      "brand": "Samsung",
+      "item_type": "smartphone",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 48,
+    "fields": {
+      "catalogue": 3,
+      "name": "Tablet e-ink reMarkable 2",
+      "description": "Bloco de notas digital com tela e-ink para leitura e escrita com foco, sem distrações de notificações.",
+      "price": "3399.00",
+      "image_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
+      "featured": false,
+      "brand": "reMarkable",
+      "item_type": "tablet",
+      "price_tier": "premium"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 49,
+    "fields": {
+      "catalogue": 3,
+      "name": "Suporte Ergonômico para Notebook Baseus",
+      "description": "Base ajustável em alumínio para elevar o notebook e melhorar postura em longas sessões de estudo.",
+      "price": "169.00",
+      "image_url": "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400",
+      "featured": false,
+      "brand": "Baseus",
+      "item_type": "suporte",
+      "price_tier": "budget"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 50,
+    "fields": {
+      "catalogue": 4,
+      "name": "Monitores de Áudio Presonus Eris 3.5 (Par)",
+      "description": "Par de caixas de referência para edição de áudio e mixagem em home studio com resposta equilibrada.",
+      "price": "1299.00",
+      "image_url": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
+      "featured": false,
+      "brand": "Presonus",
+      "item_type": "studio_monitor",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 51,
+    "fields": {
+      "catalogue": 4,
+      "name": "Iluminação Elgato Key Light Air",
+      "description": "Painel de luz para vídeo chamadas e gravações, com ajuste de temperatura de cor e controle por aplicativo.",
+      "price": "999.00",
+      "image_url": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400",
+      "featured": false,
+      "brand": "Elgato",
+      "item_type": "lighting",
+      "price_tier": "mid"
+    }
+  },
+  {
+    "model": "produtos.product",
+    "pk": 52,
+    "fields": {
+      "catalogue": 4,
+      "name": "Gravador Portátil Zoom H6",
+      "description": "Gravador digital de campo com cápsulas intercambiáveis e entradas XLR, ideal para entrevistas e podcast externo.",
+      "price": "2499.00",
+      "image_url": "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400",
+      "featured": false,
+      "brand": "Zoom",
+      "item_type": "gravador",
+      "price_tier": "premium"
+    }
+  }
+]
