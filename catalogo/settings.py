@@ -97,7 +97,7 @@ MEDIA_URL  = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ── External API keys (loaded from environment) ───────────────────────────────
-GROQ_API_KEY      = os.environ.get('GROQ_API_KEY', 'secret-groq-key-placeholder')
+GROQ_API_KEY      = os.environ.get('GROQ_API_KEY', '')
 SUPABASE_URL      = os.environ.get('SUPABASE_URL', '')
 SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
 
