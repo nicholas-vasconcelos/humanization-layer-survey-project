@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Humanizing Choice — Pesquisa de IA{% endblock %}
+{% block title %}
+  {% if lang == 'en' %}Humanizing Choice — AI Research{% else %}Humanizing Choice — Pesquisa de IA{% endif %}
+{% endblock %}
 {% block progress %}5{% endblock %}
 
 {% block extra_style %}
@@ -110,43 +112,60 @@
   <div class="hero-kicker">
     <span class="dot"></span>
     <span style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);">
-      Estudo em andamento · IBMEC Rio de Janeiro, 2026
+      {% if lang == 'en' %}
+        Study in progress · IBMEC Rio de Janeiro, 2026
+      {% else %}
+        Estudo em andamento · IBMEC Rio de Janeiro, 2026
+      {% endif %}
     </span>
   </div>
 
   <h1>
-    Como a IA te faz<br>
-    <span class="highlight">tomar decisões?</span>
+    {% if lang == 'en' %}
+      How does AI shape<br>
+      <span class="highlight">your decisions?</span>
+    {% else %}
+      Como a IA te faz<br>
+      <span class="highlight">tomar decisões?</span>
+    {% endif %}
   </h1>
 
   <p class="hero-desc">
-    Esta aplicação faz parte de uma pesquisa acadêmica que investiga como o estilo de comunicação de sistemas de IA influencia a percepção e a confiança dos usuários em recomendações de produtos.
+    {% if lang == 'en' %}
+      This application is part of an academic study that investigates how AI communication styles influence user perception and trust in product recommendations.
+    {% else %}
+      Esta aplicação faz parte de uma pesquisa acadêmica que investiga como o estilo de comunicação de sistemas de IA influencia a percepção e a confiança dos usuários em recomendações de produtos.
+    {% endif %}
   </p>
 
   <div class="hero-cards">
     <div class="info-chip">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      ~5 minutos
+      {% if lang == 'en' %}~5 minutes{% else %}~5 minutos{% endif %}
     </div>
     <div class="info-chip">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Dados anônimos
+      {% if lang == 'en' %}Anonymous data{% else %}Dados anônimos{% endif %}
     </div>
     <div class="info-chip">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      Sem respostas certas ou erradas
+      {% if lang == 'en' %}No right or wrong answers{% else %}Sem respostas certas ou erradas{% endif %}
     </div>
   </div>
 
   <div class="hero-cta">
     <a href="{% url 'select_interest' %}" class="btn btn-primary">
-      Participar da Pesquisa
+      {% if lang == 'en' %}Join the Study{% else %}Participar da Pesquisa{% endif %}
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
 
   <div class="disclaimer">
-    <strong>Sobre esta pesquisa:</strong> Você verá um catálogo de produtos tecnológicos e receberá duas recomendações geradas por IA — uma com abordagem padrão e uma com abordagem humanizada. Pedimos que avalie qual lhe pareceu mais útil ou confiável. Suas respostas são completamente anônimas e serão usadas exclusivamente para fins acadêmicos.
+    {% if lang == 'en' %}
+      <strong>About this study:</strong> You will browse a technology catalogue and receive two AI-generated recommendations — one robotic and one humanized. We ask you to evaluate which feels more useful or trustworthy. Your responses are fully anonymous and used only for academic purposes.
+    {% else %}
+      <strong>Sobre esta pesquisa:</strong> Você verá um catálogo de produtos tecnológicos e receberá duas recomendações geradas por IA — uma robótica e uma humanizada. Pedimos que avalie qual lhe pareceu mais útil ou confiável. Suas respostas são completamente anônimas e serão usadas exclusivamente para fins acadêmicos.
+    {% endif %}
   </div>
 </div>
 {% endblock %}

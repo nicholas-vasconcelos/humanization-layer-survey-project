@@ -14,6 +14,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class ProdutoSerializer(serializers.ModelSerializer):
     nome = serializers.CharField(source='name', read_only=True)
     descricao = serializers.CharField(source='description', read_only=True)
+    nome_en = serializers.CharField(source='name_en', read_only=True)
+    descricao_en = serializers.CharField(source='description_en', read_only=True)
     preco = serializers.DecimalField(source='price', max_digits=10, decimal_places=2, read_only=True)
     imagem = serializers.URLField(source='image_url', read_only=True)
     categoria = CategoriaSerializer(source='catalogue', read_only=True)
@@ -25,6 +27,8 @@ class ProdutoSerializer(serializers.ModelSerializer):
             'id',
             'nome',
             'descricao',
+            'nome_en',
+            'descricao_en',
             'preco',
             'imagem',
             'featured',

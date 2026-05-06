@@ -1,8 +1,6 @@
 import json
 import logging
-import re
 import unicodedata
-from concurrent.futures import ThreadPoolExecutor
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
@@ -21,15 +19,32 @@ from .serializers import ProdutoSerializer
 logger = logging.getLogger(__name__)
 
 
-ROBOTIC_PROMPT = """You are a recommendation engine.
-Output exactly 3 products in this format:
-1. [Product Name] — [one-line spec]
-2. [Product Name] — [one-line spec]
-3. [Product Name] — [one-line spec]
-No additional text.
-"""
+def build_lang_url(request, target_lang):
+    params = request.GET.copy()
+    params['lang'] = target_lang
+    return f"{request.path}?{params.urlencode()}"
 
-HUMANIZED_PROMPT = """You are Maya, a friendly shopping assistant helping a university tech student.
+
+def get_lang_context(request):
+    requested = request.GET.get('lang')
+    if requested in {'pt', 'en'}:
+        request.session['lang'] = requested
+
+    lang = request.session.get('lang', 'pt')
+    return {
+        'lang': lang,
+        'lang_url_pt': build_lang_url(request, 'pt'),
+        'lang_url_en': build_lang_url(request, 'en'),
+    }
+
+
+def with_lang(request, context=None):
+    payload = {} if context is None else dict(context)
+    payload.update(get_lang_context(request))
+    return payload
+
+
+HUMANIZED_PROMPT_EN = """You are Maya, a friendly shopping assistant helping a university tech student.
 Structure your response using exactly these components in order:
 1. [Persona] — introduce yourself warmly by name
 2. [Empathy Phrase] — acknowledge what the user has been browsing
@@ -38,7 +53,19 @@ Structure your response using exactly these components in order:
 5. [Call to Action] — close with a soft open-ended invitation
 Do not use headers or labels. Write in short, conversational paragraphs.
 Keep it concise: 4 to 6 short sentences, with a maximum of 90 words total.
-Respond entirely in Brazilian Portuguese.
+Respond entirely in English.
+"""
+
+HUMANIZED_PROMPT_PT = """Voce e a Maya, uma assistente de compras amigavel que ajuda um estudante universitario de tecnologia.
+Estruture sua resposta usando exatamente estes componentes nesta ordem:
+1. [Persona] — apresente-se calorosamente pelo nome
+2. [Frase de Empatia] — reconheca o que o usuario esteve explorando
+3. [Recomendacao] — sugira 3 produtos de forma natural em texto fluido
+4. [Prova Social] — mencione que outros estudantes com interesses semelhantes gostaram dessas opcoes
+5. [Chamada a Acao] — encerre com um convite aberto e suave
+Nao use titulos nem rotulos. Escreva em paragrafos curtos e conversacionais.
+Seja concisa: 4 a 6 frases curtas, com no maximo 90 palavras no total.
+Responda inteiramente em portugues brasileiro.
 """
 
 
@@ -62,15 +89,31 @@ class ProdutoViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(recommendations, status=status.HTTP_200_OK)
 
 
-def build_user_content(catalogue_obj, selected_products):
+def get_product_name(product, lang):
+    if lang == 'en' and getattr(product, 'name_en', ''):
+        return product.name_en
+    return product.name
+
+
+def get_product_description(product, lang):
+    if lang == 'en' and getattr(product, 'description_en', ''):
+        return product.description_en
+    return product.description
+
+
+def build_user_content(catalogue_obj, selected_products, lang):
+    catalogue_label = 'Catalogue' if lang == 'en' else 'Catalogo'
+    selected_label = 'Selected products' if lang == 'en' else 'Produtos selecionados'
+    price_label = 'price=BRL' if lang == 'en' else 'preco=R$'
+
     products_text = "\n".join(
         (
-            f"- {product.name}: {product.description} "
-            f"(brand={product.brand}, item_type={product.item_type}, price_tier={product.price_tier}, preco=R$ {product.price})"
+            f"- {get_product_name(product, lang)}: {get_product_description(product, lang)} "
+            f"(brand={product.brand}, item_type={product.item_type}, price_tier={product.price_tier}, {price_label} {product.price})"
         )
         for product in selected_products
     )
-    return f"Catalogue: {catalogue_obj.name}\nSelected products:\n{products_text}"
+    return f"{catalogue_label}: {catalogue_obj.name}\n{selected_label}:\n{products_text}"
 
 
 def build_ranked_candidates(selected_products, catalogue_obj, top_n=8):
@@ -127,9 +170,20 @@ def build_ranked_candidates(selected_products, catalogue_obj, top_n=8):
     return ranked[:top_n]
 
 
-def append_ranked_candidates_to_content(base_content, ranked_candidates):
+def append_ranked_candidates_to_content(base_content, ranked_candidates, lang):
+    heading = (
+        'Ranked candidate products by attribute scoring'
+        if lang == 'en'
+        else 'Produtos candidatos ranqueados por pontuacao de atributos'
+    )
+    empty_line = (
+        '- No ranked candidates available.'
+        if lang == 'en'
+        else '- Nenhum candidato ranqueado disponivel.'
+    )
+
     if not ranked_candidates:
-        return f"{base_content}\n\nRanked candidate products by attribute scoring:\n- No ranked candidates available."
+        return f"{base_content}\n\n{heading}:\n{empty_line}"
 
     ranked_text = "\n".join(
         (
@@ -139,7 +193,7 @@ def append_ranked_candidates_to_content(base_content, ranked_candidates):
         )
         for candidate in ranked_candidates
     )
-    return f"{base_content}\n\nRanked candidate products by attribute scoring:\n{ranked_text}"
+    return f"{base_content}\n\n{heading}:\n{ranked_text}"
 
 
 def normalize_name(value):
@@ -147,9 +201,11 @@ def normalize_name(value):
     return ''.join(char for char in normalized if not unicodedata.combining(char))
 
 
-def build_product_spec(product):
-    description = (product.description or '').strip()
+def build_product_spec(product, lang):
+    description = (get_product_description(product, lang) or '').strip()
     if not description:
+        if lang == 'en':
+            return f"Option from the {product.catalogue.name} catalogue."
         return f"Opcao da categoria {product.catalogue.name}."
 
     first_sentence = description.split('. ')[0].strip()
@@ -159,51 +215,23 @@ def build_product_spec(product):
     return sentence
 
 
-def sanitize_robotic_output(raw_text, allowed_products):
-    if not allowed_products:
-        return raw_text
+def build_robotic_output(products, lang, max_items=3):
+    if not products:
+        return ''
 
-    products_by_name = {normalize_name(product.name): product for product in allowed_products}
-    used_ids = set()
     output_items = []
-
-    for line in (raw_text or '').splitlines():
-        cleaned_line = line.strip()
-        if not cleaned_line:
-            continue
-
-        match = re.match(r'^\d+\.\s*(.+)$', cleaned_line)
-        content = match.group(1).strip() if match else cleaned_line
-        name_part, spec_part = re.split(r'\s+[—-]\s+', content, maxsplit=1) if re.search(r'\s+[—-]\s+', content) else (content, '')
-
-        parsed_name = name_part.strip().strip('[]').strip()
-        parsed_spec = spec_part.strip().strip('[]').strip()
-        product = products_by_name.get(normalize_name(parsed_name))
-
-        if not product or product.id in used_ids:
-            continue
-
-        used_ids.add(product.id)
-        output_items.append((product, parsed_spec or build_product_spec(product)))
-
-        if len(output_items) == 3:
+    for product in products:
+        output_items.append((product, build_product_spec(product, lang)))
+        if len(output_items) >= max_items:
             break
-
-    for product in allowed_products:
-        if len(output_items) == 3:
-            break
-        if product.id in used_ids:
-            continue
-        used_ids.add(product.id)
-        output_items.append((product, build_product_spec(product)))
 
     return "\n".join(
-        f"{index}. {product.name} — {spec}"
+        f"{index}. {get_product_name(product, lang)} — {spec}"
         for index, (product, spec) in enumerate(output_items, start=1)
     )
 
 
-def select_products_for_humanized_output(raw_text, preferred_products, fallback_products, top_n=3):
+def select_products_for_humanized_output(raw_text, preferred_products, fallback_products, top_n=3, lang='pt'):
     normalized_text = normalize_name(raw_text)
 
     merged_candidates = []
@@ -218,7 +246,7 @@ def select_products_for_humanized_output(raw_text, preferred_products, fallback_
     selected_ids = set()
 
     for product in merged_candidates:
-        normalized_product_name = normalize_name(product.name)
+        normalized_product_name = normalize_name(get_product_name(product, lang))
         if normalized_product_name and normalized_product_name in normalized_text:
             selected.append(product)
             selected_ids.add(product.id)
@@ -236,24 +264,43 @@ def select_products_for_humanized_output(raw_text, preferred_products, fallback_
     return selected
 
 
-def all_products_mentioned(raw_text, products):
+def all_products_mentioned(raw_text, products, lang):
     normalized_text = normalize_name(raw_text)
-    return all(normalize_name(product.name) in normalized_text for product in products)
+    return all(normalize_name(get_product_name(product, lang)) in normalized_text for product in products)
 
 
-def build_humanized_consistent_output(products):
+def build_humanized_consistent_output(products, lang):
     if not products:
+        if lang == 'en':
+            return 'Hi, I am Maya. I can help you with new options whenever you want.'
         return 'Oi, eu sou a Maya. Posso te ajudar com novas opcoes quando voce quiser.'
 
-    if len(products) == 1:
-        recommendation_line = f"Eu recomendo o {products[0].name}."
-    elif len(products) == 2:
-        recommendation_line = f"Eu recomendo o {products[0].name} e o {products[1].name}."
-    else:
-        recommendation_line = (
-            f"Eu recomendo o {products[0].name}, o {products[1].name} "
-            f"e o {products[2].name}."
+    names = [get_product_name(product, lang) for product in products]
+
+    if lang == 'en':
+        if len(names) == 1:
+            recommendation_line = f"I recommend the {names[0]}."
+        elif len(names) == 2:
+            recommendation_line = f"I recommend the {names[0]} and the {names[1]}."
+        else:
+            recommendation_line = f"I recommend the {names[0]}, the {names[1]}, and the {names[2]}."
+
+        return " ".join(
+            [
+                'Hi, I am Maya and I loved your picks.',
+                'From what you explored, you seem to be looking for strong performance at a fair price.',
+                recommendation_line,
+                'Other students with similar interests really liked these options.',
+                'If you want, I can show which one fits your use best.',
+            ]
         )
+
+    if len(names) == 1:
+        recommendation_line = f"Eu recomendo o {names[0]}."
+    elif len(names) == 2:
+        recommendation_line = f"Eu recomendo o {names[0]} e o {names[1]}."
+    else:
+        recommendation_line = f"Eu recomendo o {names[0]}, o {names[1]} e o {names[2]}."
 
     return " ".join(
         [
@@ -318,7 +365,7 @@ def landing(request):
                 'robotic_output', 'humanized_output']:
         request.session.pop(key, None)
 
-    return render(request, 'landing.html')
+    return render(request, 'landing.html', with_lang(request))
 
 
 # ─────────────────────────────────────────────
@@ -338,7 +385,9 @@ def select_interest(request):
         return redirect('catalogue')
 
     catalogues = Catalogue.objects.all()
-    return render(request, 'select_interest.html', {'catalogues': catalogues})
+    return render(request, 'select_interest.html', with_lang(request, {
+        'catalogues': catalogues,
+    }))
 
 
 # ─────────────────────────────────────────────
@@ -357,10 +406,10 @@ def catalogue(request):
     catalogue_obj = get_object_or_404(Catalogue, slug=slug)
     products = catalogue_obj.products.all()
 
-    return render(request, 'catalogue.html', {
+    return render(request, 'catalogue.html', with_lang(request, {
         'catalogue': catalogue_obj,
         'products': products,
-    })
+    }))
 
 
 def all_catalogue(request):
@@ -370,10 +419,10 @@ def all_catalogue(request):
     products = Product.objects.select_related('catalogue').order_by(
         'catalogue__name', '-featured', 'name'
     )
-    return render(request, 'all_catalogue.html', {
+    return render(request, 'all_catalogue.html', with_lang(request, {
         'products': products,
         'total_products': products.count(),
-    })
+    }))
 
 
 # ─────────────────────────────────────────────
@@ -411,8 +460,8 @@ def save_selection(request):
 # ─────────────────────────────────────────────
 def recommendations(request):
     """
-    Reads session data, calls Groq API in parallel,
-    and renders both A/B outputs side by side.
+    Reads session data, calls Groq for the humanized output,
+    and renders robotic/humanized outputs side by side.
     """
     slug = request.session.get('interest_slug')
     ids  = request.session.get('selected_product_ids')
@@ -429,9 +478,20 @@ def recommendations(request):
         from django.shortcuts import redirect
         return redirect('catalogue')
 
-    user_content = build_user_content(catalogue_obj, selected_products)
+    lang = get_lang_context(request)['lang']
+    user_content = build_user_content(catalogue_obj, selected_products, lang)
     ranked_candidates = build_ranked_candidates(selected_products, catalogue_obj, top_n=8)
-    user_content = append_ranked_candidates_to_content(user_content, ranked_candidates)
+    if ranked_candidates:
+        ranked_ids = [candidate['id'] for candidate in ranked_candidates if candidate.get('id')]
+        ranked_products = {
+            product.id: product
+            for product in Product.objects.filter(id__in=ranked_ids)
+        }
+        for candidate in ranked_candidates:
+            product = ranked_products.get(candidate.get('id'))
+            if product:
+                candidate['nome'] = get_product_name(product, lang)
+    user_content = append_ranked_candidates_to_content(user_content, ranked_candidates, lang)
 
     selected_ids = {product.id for product in selected_products}
     candidate_pool = list(
@@ -500,33 +560,34 @@ def recommendations(request):
                 humanized_card_products.append(product)
                 already_ids.add(product.id)
 
-    robotic_products_payload = list(
-        Product.objects.filter(catalogue=catalogue_obj)
-        .values('name', 'price', 'image_url')
-    )
+    robotic_products_payload = [
+        {
+            'name': get_product_name(product, lang),
+            'price': product.price,
+            'image_url': product.image_url,
+        }
+        for product in Product.objects.filter(catalogue=catalogue_obj)
+    ]
 
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        f_robotic = executor.submit(call_groq, ROBOTIC_PROMPT, user_content)
-        f_humanized = executor.submit(call_groq, HUMANIZED_PROMPT, user_content)
-        robotic_output_raw = f_robotic.result()
-        humanized_output_raw = f_humanized.result()
-
-    robotic_output = sanitize_robotic_output(robotic_output_raw, robotic_allowed_products)
+    humanized_prompt = HUMANIZED_PROMPT_EN if lang == 'en' else HUMANIZED_PROMPT_PT
+    humanized_output_raw = call_groq(humanized_prompt, user_content)
+    robotic_output = build_robotic_output(robotic_allowed_products, lang)
 
     humanized_card_products = select_products_for_humanized_output(
         humanized_output_raw,
         preferred_products=humanized_card_products,
         fallback_products=robotic_allowed_products,
         top_n=3,
+        lang=lang,
     )
-    if all_products_mentioned(humanized_output_raw, humanized_card_products):
+    if all_products_mentioned(humanized_output_raw, humanized_card_products, lang):
         humanized_output = humanized_output_raw
     else:
-        humanized_output = build_humanized_consistent_output(humanized_card_products)
+        humanized_output = build_humanized_consistent_output(humanized_card_products, lang)
 
     humanized_products_payload = [
         {
-            'name': product.name,
+            'name': get_product_name(product, lang),
             'image_url': product.image_url or '',
         }
         for product in humanized_card_products[:3]
@@ -536,7 +597,7 @@ def recommendations(request):
     request.session['robotic_output']   = robotic_output
     request.session['humanized_output'] = humanized_output
 
-    return render(request, 'recommendations.html', {
+    return render(request, 'recommendations.html', with_lang(request, {
         'catalogue':          catalogue_obj,
         'selected_products':  selected_products,
         'robotic_output':     robotic_output,
@@ -544,7 +605,7 @@ def recommendations(request):
         'humanized_card_products': humanized_card_products,
         'humanized_products_payload': humanized_products_payload,
         'robotic_products_payload': robotic_products_payload,
-    })
+    }))
 
 
 # ─────────────────────────────────────────────
@@ -602,13 +663,13 @@ def survey(request):
     preferred = request.POST.get('preferred_overall') or \
                 request.GET.get('preferred')  # passed as query param from JS
 
-    return render(request, 'survey.html', {
+    return render(request, 'survey.html', with_lang(request, {
         'preferred_initial': preferred,
-    })
+    }))
 
 
 # ─────────────────────────────────────────────
 # Step 6 — Thank you
 # ─────────────────────────────────────────────
 def thank_you(request):
-    return render(request, 'thank_you.html')
+    return render(request, 'thank_you.html', with_lang(request))

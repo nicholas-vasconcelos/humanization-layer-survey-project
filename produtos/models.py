@@ -22,7 +22,9 @@ class Product(models.Model):
         related_name='products'
     )
     name = models.CharField(max_length=100)
+    name_en = models.CharField(max_length=100, blank=True, default='')
     description = models.TextField(max_length=500)
+    description_en = models.TextField(max_length=500, blank=True, default='')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image_url = models.URLField(blank=True, null=True)
     featured = models.BooleanField(default=False)
@@ -53,8 +55,8 @@ class SessionResponse(models.Model):
     ]
 
     AB_CHOICES = [
-        ('A', 'Recomendação A'),
-        ('B', 'Recomendação B'),
+        ('A', 'Recomendação Robótica'),
+        ('B', 'Recomendação Humanizada'),
     ]
 
     session_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)

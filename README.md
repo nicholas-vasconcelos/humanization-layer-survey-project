@@ -11,7 +11,7 @@ Supervised by Prof. Rigel Fernandes
 
 *Humanizing Choice* is a web application built to support the academic paper **"Humanizing Choice — Anthropomorphic AI in Recommendations"**. The study investigates how anthropomorphic prompt engineering influences trust, purchase intent, and perceived understanding among technology university students.
 
-Participants browse a product catalogue, select items of interest, and are then shown two AI-generated recommendations side by side — one robotic, one humanized — before completing a short survey. All data is collected anonymously.
+Participants browse a product catalogue, select items of interest, and are then shown two AI-generated recommendations side by side — one robotic and one humanized — before completing a short survey. All data is collected anonymously.
 
 ---
 
@@ -29,14 +29,14 @@ The core contribution is a **five-component humanization prompt framework**:
 
 Each component is grounded in referenced theoretical constructs (Mariani et al. 2022, Beyari & Hashem 2025, Ribeiro et al. 2025, Srivastava & Gurme 2026, Moussawi et al. 2021, Kim et al. 2019, Kumar et al. 2025).
 
-The experiment produces two outputs from the same product input — **Recommendation A** (robotic, rule-based) and **Recommendation B** (humanized, via a single Groq LLM call) — and measures user preference across four dimensions: overall preference, trust, purchase intention, and feeling understood.
+The experiment produces two outputs from the same product input — a robotic, rule-based recommendation and a humanized recommendation (via a single Groq LLM call) — and measures user preference across four dimensions: overall preference, trust, purchase intention, and feeling understood.
 
 ---
 
 ## User Flow
 
 ```
-Landing → Select Interest → Product Catalogue → Recommendations (A/B) → Survey → Thank You
+Landing → Select Interest → Product Catalogue → Recommendations (Robotic/Humanized) → Survey → Thank You
 ```
 
 1. **Landing** — explains the research context; collects no data yet.
@@ -189,14 +189,14 @@ A principal contribuição é um **framework de humanização com cinco componen
 
 Cada componente é fundamentado em construtos teóricos referenciados (Mariani et al. 2022, Beyari & Hashem 2025, Ribeiro et al. 2025, Srivastava & Gurme 2026, Moussawi et al. 2021, Kim et al. 2019, Kumar et al. 2025).
 
-O experimento produz dois outputs a partir do mesmo input de produtos — **Recomendação A** (robótica, baseada em regras) e **Recomendação B** (humanizada, via uma única chamada ao LLM Groq) — e mede a preferência do usuário em quatro dimensões: preferência geral, confiança, intenção de compra e sentir-se compreendido.
+O experimento produz dois outputs a partir do mesmo input de produtos — uma recomendação robótica (baseada em regras) e uma recomendação humanizada (via uma única chamada ao LLM Groq) — e mede a preferência do usuário em quatro dimensões: preferência geral, confiança, intenção de compra e sentir-se compreendido.
 
 ---
 
 ## Fluxo do Usuário
 
 ```
-Landing → Selecionar Interesse → Catálogo → Recomendações (A/B) → Pesquisa → Obrigado
+Landing → Selecionar Interesse → Catálogo → Recomendações (Robótica/Humanizada) → Pesquisa → Obrigado
 ```
 
 1. **Landing** — explica o contexto da pesquisa; nenhum dado é coletado ainda.

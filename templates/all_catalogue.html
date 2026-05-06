@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Catálogo Completo — Humanizing Choice{% endblock %}
+{% block title %}
+  {% if lang == 'en' %}Full Catalogue — Humanizing Choice{% else %}Catálogo Completo — Humanizing Choice{% endif %}
+{% endblock %}
 {% block progress %}0{% endblock %}
 
 {% block extra_style %}
@@ -161,17 +163,27 @@
 {% block content %}
 <div class="all-page">
   <div class="all-header fade-up">
-    <div class="eyebrow">Apresentação do Catálogo</div>
-    <h2>Catálogo completo de produtos</h2>
-    <p>Visualização unificada de todos os itens disponíveis para demonstração.</p>
+    <div class="eyebrow">{% if lang == 'en' %}Catalogue Showcase{% else %}Apresentação do Catálogo{% endif %}</div>
+    <h2>{% if lang == 'en' %}Full product catalogue{% else %}Catálogo completo de produtos{% endif %}</h2>
+    <p>
+      {% if lang == 'en' %}
+        Unified view of all items available for demonstration.
+      {% else %}
+        Visualização unificada de todos os itens disponíveis para demonstração.
+      {% endif %}
+    </p>
   </div>
 
   <div class="summary-strip fade-up delay-1">
     <div>
-      <div class="summary-caption">Total de itens</div>
-      <div class="summary-count">{{ total_products }} produtos</div>
+      <div class="summary-caption">{% if lang == 'en' %}Total items{% else %}Total de itens{% endif %}</div>
+      <div class="summary-count">
+        {{ total_products }} {% if lang == 'en' %}products{% else %}produtos{% endif %}
+      </div>
     </div>
-    <a class="btn btn-ghost" href="{% url 'landing' %}">Voltar para a página inicial</a>
+    <a class="btn btn-ghost" href="{% url 'landing' %}">
+      {% if lang == 'en' %}Back to the landing page{% else %}Voltar para a página inicial{% endif %}
+    </a>
   </div>
 
   {% regroup products by catalogue as grouped_products %}
@@ -179,7 +191,7 @@
     <section class="section-block fade-up delay-2">
       <div class="section-title">
         <h3>{{ group.grouper.name }}</h3>
-        <span>{{ group.list|length }} itens</span>
+        <span>{{ group.list|length }} {% if lang == 'en' %}items{% else %}itens{% endif %}</span>
       </div>
 
       <div class="product-grid">
@@ -195,11 +207,23 @@
             <div class="product-body">
               <div class="product-top">
                 {% if product.featured %}
-                  <span class="product-badge">Destaque</span>
+                  <span class="product-badge">{% if lang == 'en' %}Featured{% else %}Destaque{% endif %}</span>
                 {% endif %}
               </div>
-              <div class="product-name">{{ product.name }}</div>
-              <div class="product-desc">{{ product.description }}</div>
+              <div class="product-name">
+                {% if lang == 'en' and product.name_en %}
+                  {{ product.name_en }}
+                {% else %}
+                  {{ product.name }}
+                {% endif %}
+              </div>
+              <div class="product-desc">
+                {% if lang == 'en' and product.description_en %}
+                  {{ product.description_en }}
+                {% else %}
+                  {{ product.description }}
+                {% endif %}
+              </div>
               <div class="product-price">R$ {{ product.price }}</div>
             </div>
           </article>

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Escolha seu Interesse — Humanizing Choice{% endblock %}
+{% block title %}
+  {% if lang == 'en' %}Choose Your Interest — Humanizing Choice{% else %}Escolha seu Interesse — Humanizing Choice{% endif %}
+{% endblock %}
 {% block progress %}20{% endblock %}
 
 {% block extra_style %}
@@ -107,9 +109,21 @@
 {% block content %}
 <div class="select-page">
   <div class="select-header fade-up">
-    <div class="eyebrow">Passo 1 de 4</div>
-    <h2>Qual é a sua área de interesse em tecnologia?</h2>
-    <p>Sua escolha determina quais produtos aparecerão no catálogo.</p>
+    <div class="eyebrow">{% if lang == 'en' %}Step 1 of 4{% else %}Passo 1 de 4{% endif %}</div>
+    <h2>
+      {% if lang == 'en' %}
+        What is your main interest area in technology?
+      {% else %}
+        Qual é a sua área de interesse em tecnologia?
+      {% endif %}
+    </h2>
+    <p>
+      {% if lang == 'en' %}
+        Your choice determines which products appear in the catalogue.
+      {% else %}
+        Sua escolha determina quais produtos aparecerão no catálogo.
+      {% endif %}
+    </p>
   </div>
 
   <div class="interest-grid">
@@ -117,8 +131,14 @@
        class="interest-card card-dev fade-up delay-1"
        onclick="setInterest('programacao-desenvolvimento')">
       <span class="card-icon">💻</span>
-      <h3>Programação & Desenvolvimento</h3>
-      <p>Monitores, teclados mecânicos, SSDs, periféricos e equipamentos para devs.</p>
+      <h3>{% if lang == 'en' %}Programming & Development{% else %}Programação & Desenvolvimento{% endif %}</h3>
+      <p>
+        {% if lang == 'en' %}
+          Monitors, mechanical keyboards, SSDs, peripherals, and developer gear.
+        {% else %}
+          Monitores, teclados mecânicos, SSDs, periféricos e equipamentos para devs.
+        {% endif %}
+      </p>
       <div class="card-arrow">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
@@ -128,8 +148,14 @@
        class="interest-card card-games fade-up delay-2"
        onclick="setInterest('games-performance')">
       <span class="card-icon">🎮</span>
-      <h3>Games & Performance</h3>
-      <p>GPUs, monitores de alta taxa de atualização, headsets e periféricos gamer.</p>
+      <h3>{% if lang == 'en' %}Gaming & Performance{% else %}Games & Performance{% endif %}</h3>
+      <p>
+        {% if lang == 'en' %}
+          GPUs, high-refresh monitors, headsets, and gaming peripherals.
+        {% else %}
+          GPUs, monitores de alta taxa de atualização, headsets e periféricos gamer.
+        {% endif %}
+      </p>
       <div class="card-arrow">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
@@ -139,8 +165,14 @@
        class="interest-card card-study fade-up delay-3"
        onclick="setInterest('produtividade-estudos')">
       <span class="card-icon">📚</span>
-      <h3>Produtividade & Estudos</h3>
-      <p>Tablets, notebooks leves, e-readers, webcams e acessórios para estudar.</p>
+      <h3>{% if lang == 'en' %}Productivity & Study{% else %}Produtividade & Estudos{% endif %}</h3>
+      <p>
+        {% if lang == 'en' %}
+          Tablets, light laptops, e-readers, webcams, and study accessories.
+        {% else %}
+          Tablets, notebooks leves, e-readers, webcams e acessórios para estudar.
+        {% endif %}
+      </p>
       <div class="card-arrow">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
@@ -150,8 +182,14 @@
        class="interest-card card-audio fade-up delay-4"
        onclick="setInterest('audio-comunicacao')">
       <span class="card-icon">🎧</span>
-      <h3>Áudio & Comunicação</h3>
-      <p>Microfones, fones de ouvido, interfaces de áudio e câmeras para reuniões.</p>
+      <h3>{% if lang == 'en' %}Audio & Communication{% else %}Áudio & Comunicação{% endif %}</h3>
+      <p>
+        {% if lang == 'en' %}
+          Microphones, headphones, audio interfaces, and cameras for meetings.
+        {% else %}
+          Microfones, fones de ouvido, interfaces de áudio e câmeras para reuniões.
+        {% endif %}
+      </p>
       <div class="card-arrow">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>

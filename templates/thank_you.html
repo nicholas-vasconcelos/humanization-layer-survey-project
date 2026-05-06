@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Obrigado — Humanizing Choice{% endblock %}
+{% block title %}
+  {% if lang == 'en' %}Thank You — Humanizing Choice{% else %}Obrigado — Humanizing Choice{% endif %}
+{% endblock %}
 {% block progress %}100{% endblock %}
 
 {% block extra_style %}
@@ -84,37 +86,59 @@
 <div class="thanks-page">
   <div class="thanks-icon">✓</div>
 
-  <h2>Sua resposta foi registrada!</h2>
-  <p class="subtitle">Muito obrigado(a) por participar desta pesquisa.</p>
+  <h2>{% if lang == 'en' %}Your response has been recorded!{% else %}Sua resposta foi registrada!{% endif %}</h2>
+  <p class="subtitle">
+    {% if lang == 'en' %}
+      Thank you for participating in this study.
+    {% else %}
+      Muito obrigado(a) por participar desta pesquisa.
+    {% endif %}
+  </p>
 
   <div class="reveal-card">
-    <h3>Sobre o experimento</h3>
+    <h3>{% if lang == 'en' %}About the experiment{% else %}Sobre o experimento{% endif %}</h3>
     <p>
-      Você acabou de interagir com dois sistemas de recomendação baseados no mesmo modelo de IA — <strong>llama-8B</strong> — alimentados com os mesmos produtos. A única diferença entre eles foi a estrutura do <em>prompt</em>.
+      {% if lang == 'en' %}
+        You just interacted with two recommendation systems based on the same AI model — <strong>llama-8B</strong> — using the same products. The only difference was the prompt structure.
+      {% else %}
+        Você acabou de interagir com dois sistemas de recomendação baseados no mesmo modelo de IA — <strong>llama-8B</strong> — alimentados com os mesmos produtos. A única diferença entre eles foi a estrutura do <em>prompt</em>.
+      {% endif %}
     </p>
     <p>
-      A <strong>Recomendação A</strong> usou um prompt deliberadamente restritivo, que instrui a IA a retornar apenas três produtos num formato fixo, sem texto adicional — simulando um motor de recomendação convencional.
+      {% if lang == 'en' %}
+        The <strong>robotic recommendation</strong> used a deliberately restrictive prompt that instructs the AI to return exactly three products in a fixed format, with no additional text — simulating a conventional recommendation engine.
+      {% else %}
+        A <strong>recomendação robótica</strong> usou um prompt deliberadamente restritivo, que instrui a IA a retornar apenas três produtos num formato fixo, sem texto adicional — simulando um motor de recomendação convencional.
+      {% endif %}
     </p>
     <p>
-      A <strong>Recomendação B</strong> ativou o <em>Humanization Framework</em> proposto nesta pesquisa: um conjunto estruturado de cinco componentes — Persona, Empatia, Recomendação, Prova Social e Chamada à Ação — projetados para injetar características antropomórficas no output da IA.
+      {% if lang == 'en' %}
+        The <strong>humanized recommendation</strong> activated the Humanization Framework proposed in this research: a structured set of five components — Persona, Empathy, Recommendation, Social Proof, and Call to Action — designed to inject anthropomorphic cues into the AI output.
+      {% else %}
+        A <strong>recomendação humanizada</strong> ativou o <em>Humanization Framework</em> proposto nesta pesquisa: um conjunto estruturado de cinco componentes — Persona, Empatia, Recomendação, Prova Social e Chamada à Ação — projetados para injetar características antropomórficas no output da IA.
+      {% endif %}
     </p>
 
     <div class="framework-pills">
       <span class="framework-pill"><strong>1</strong> Persona (Maya)</span>
-      <span class="framework-pill"><strong>2</strong> Frase de Empatia</span>
-      <span class="framework-pill"><strong>3</strong> Recomendação</span>
-      <span class="framework-pill"><strong>4</strong> Prova Social</span>
-      <span class="framework-pill"><strong>5</strong> Chamada à Ação</span>
+      <span class="framework-pill"><strong>2</strong> {% if lang == 'en' %}Empathy Phrase{% else %}Frase de Empatia{% endif %}</span>
+      <span class="framework-pill"><strong>3</strong> {% if lang == 'en' %}Recommendation{% else %}Recomendação{% endif %}</span>
+      <span class="framework-pill"><strong>4</strong> {% if lang == 'en' %}Social Proof{% else %}Prova Social{% endif %}</span>
+      <span class="framework-pill"><strong>5</strong> {% if lang == 'en' %}Call to Action{% else %}Chamada à Ação{% endif %}</span>
     </div>
 
     <p style="margin-top: 1.25rem;">
-      Suas respostas nos ajudarão a mensurar se — e em que dimensões — essa camada de humanização afeta a percepção de confiança, utilidade e intenção de compra em estudantes universitários de tecnologia.
+      {% if lang == 'en' %}
+        Your responses help us measure whether — and in which dimensions — this humanization layer affects perceptions of trust, usefulness, and purchase intent among university tech students.
+      {% else %}
+        Suas respostas nos ajudarão a mensurar se — e em que dimensões — essa camada de humanização afeta a percepção de confiança, utilidade e intenção de compra em estudantes universitários de tecnologia.
+      {% endif %}
     </p>
   </div>
 
   <div class="restart-wrap">
     <a href="{% url 'landing' %}" class="btn btn-ghost">
-      Voltar ao início
+      {% if lang == 'en' %}Back to start{% else %}Voltar ao início{% endif %}
     </a>
   </div>
 </div>

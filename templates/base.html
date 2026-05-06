@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="{% if lang|default:'pt' == 'en' %}en{% else %}pt-br{% endif %}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,6 +104,41 @@
       border: 1px solid var(--border);
       padding: 0.3rem 0.75rem;
       border-radius: 999px;
+    }
+
+    .topbar-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .lang-toggle a {
+      padding: 0.3rem 0.7rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-toggle a:last-child {
+      border-right: none;
+    }
+
+    .lang-toggle a.active {
+      background: var(--accent2);
+      color: #ffffff;
     }
 
     /* ── Progress indicator ── */
@@ -222,7 +257,19 @@
 
   <nav class="topbar">
     <a href="{% url 'landing' %}" class="topbar-logo">Humanizing<span>Choice</span></a>
-    <span class="topbar-badge">Pesquisa Acadêmica · IBMEC Rio</span>
+    <div class="topbar-right">
+      <span class="topbar-badge">
+        {% if lang|default:'pt' == 'en' %}
+          Academic Research · IBMEC Rio
+        {% else %}
+          Pesquisa Acadêmica · IBMEC Rio
+        {% endif %}
+      </span>
+      <div class="lang-toggle">
+        <a href="{{ lang_url_pt|default:'?lang=pt' }}" class="{% if lang|default:'pt' == 'pt' %}active{% endif %}">PT</a>
+        <a href="{{ lang_url_en|default:'?lang=en' }}" class="{% if lang|default:'pt' == 'en' %}active{% endif %}">EN</a>
+      </div>
+    </div>
   </nav>
 
   <div class="progress-bar">

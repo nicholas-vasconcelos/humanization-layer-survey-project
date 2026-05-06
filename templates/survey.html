@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Pesquisa — Humanizing Choice{% endblock %}
+{% block title %}
+  {% if lang == 'en' %}Survey — Humanizing Choice{% else %}Pesquisa — Humanizing Choice{% endif %}
+{% endblock %}
 {% block progress %}82{% endblock %}
 
 {% block extra_style %}
@@ -88,9 +90,17 @@
 {% block content %}
 <div class="survey-page">
   <div class="survey-header fade-up">
-    <div class="eyebrow">Passo 4 de 4 · Última etapa</div>
-    <h2>Sua Avaliação</h2>
-    <p>Todas as respostas são de toque — nenhuma digitação necessária.</p>
+    <div class="eyebrow">
+      {% if lang == 'en' %}Step 4 of 4 · Final step{% else %}Passo 4 de 4 · Última etapa{% endif %}
+    </div>
+    <h2>{% if lang == 'en' %}Your Evaluation{% else %}Sua Avaliação{% endif %}</h2>
+    <p>
+      {% if lang == 'en' %}
+        All answers are tap-only — no typing required.
+      {% else %}
+        Todas as respostas são de toque — nenhuma digitação necessária.
+      {% endif %}
+    </p>
   </div>
 
   <form method="POST" action="{% url 'survey' %}" id="surveyForm">
@@ -98,43 +108,53 @@
 
     <!-- Section 1: Direct comparison -->
     <div class="survey-section fade-up delay-1">
-      <div class="section-title">Seção 1 — Comparação Direta</div>
+      <div class="section-title">
+        {% if lang == 'en' %}Section 1 — Direct Comparison{% else %}Seção 1 — Comparação Direta{% endif %}
+      </div>
 
       <div class="question-block">
-        <div class="question-label">1. Qual recomendação você prefere no geral?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}1. Which recommendation do you prefer overall?{% else %}1. Qual recomendação você prefere no geral?{% endif %}
+        </div>
         <div class="option-group">
           <button type="button" class="option-btn {% if preferred_initial == 'A' %}active{% endif %}"
-                  onclick="pick(this, 'preferred_overall', 'A')">Recomendação A</button>
+                    onclick="pick(this, 'preferred_overall', 'A')">{% if lang == 'en' %}Robotic recommendation{% else %}Recomendação Robótica{% endif %}</button>
           <button type="button" class="option-btn {% if preferred_initial == 'B' %}active{% endif %}"
-                  onclick="pick(this, 'preferred_overall', 'B')">Recomendação B</button>
+                    onclick="pick(this, 'preferred_overall', 'B')">{% if lang == 'en' %}Humanized recommendation{% else %}Recomendação Humanizada{% endif %}</button>
         </div>
         <input type="hidden" name="preferred_overall" id="preferred_overall"
                value="{{ preferred_initial|default:'' }}" class="hidden-input">
       </div>
 
       <div class="question-block">
-        <div class="question-label">2. Qual recomendação pareceu mais confiável?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}2. Which recommendation felt more trustworthy?{% else %}2. Qual recomendação pareceu mais confiável?{% endif %}
+        </div>
         <div class="option-group">
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'A')">Recomendação A</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'B')">Recomendação B</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'A')">{% if lang == 'en' %}Robotic recommendation{% else %}Recomendação Robótica{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_trust', 'B')">{% if lang == 'en' %}Humanized recommendation{% else %}Recomendação Humanizada{% endif %}</button>
         </div>
         <input type="hidden" name="preferred_trust" id="preferred_trust" value="" class="hidden-input">
       </div>
 
       <div class="question-block">
-        <div class="question-label">3. Qual te deixou mais propenso(a) a comprar?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}3. Which made you more likely to buy?{% else %}3. Qual te deixou mais propenso(a) a comprar?{% endif %}
+        </div>
         <div class="option-group">
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'A')">Recomendação A</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'B')">Recomendação B</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'A')">{% if lang == 'en' %}Robotic recommendation{% else %}Recomendação Robótica{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_purchase', 'B')">{% if lang == 'en' %}Humanized recommendation{% else %}Recomendação Humanizada{% endif %}</button>
         </div>
         <input type="hidden" name="preferred_purchase" id="preferred_purchase" value="" class="hidden-input">
       </div>
 
       <div class="question-block">
-        <div class="question-label">4. Qual te fez sentir mais compreendido(a)?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}4. Which made you feel more understood?{% else %}4. Qual te fez sentir mais compreendido(a)?{% endif %}
+        </div>
         <div class="option-group">
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'A')">Recomendação A</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'B')">Recomendação B</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'A')">{% if lang == 'en' %}Robotic recommendation{% else %}Recomendação Robótica{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'preferred_understood', 'B')">{% if lang == 'en' %}Humanized recommendation{% else %}Recomendação Humanizada{% endif %}</button>
         </div>
         <input type="hidden" name="preferred_understood" id="preferred_understood" value="" class="hidden-input">
       </div>
@@ -142,25 +162,31 @@
 
     <!-- Section 2: Participant profile -->
     <div class="survey-section fade-up delay-2">
-      <div class="section-title">Seção 2 — Perfil do Participante</div>
+      <div class="section-title">
+        {% if lang == 'en' %}Section 2 — Participant Profile{% else %}Seção 2 — Perfil do Participante{% endif %}
+      </div>
 
       <div class="question-block">
-        <div class="question-label">5. Você costuma usar IA para decisões de compra?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}5. Do you use AI for purchase decisions?{% else %}5. Você costuma usar IA para decisões de compra?{% endif %}
+        </div>
         <div class="option-group">
-          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'sim')">Sim</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'nao')">Não</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'as_vezes')">Às vezes</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'sim')">{% if lang == 'en' %}Yes{% else %}Sim{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'nao')">{% if lang == 'en' %}No{% else %}Não{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'uses_ai_shopping', 'as_vezes')">{% if lang == 'en' %}Sometimes{% else %}Às vezes{% endif %}</button>
         </div>
         <input type="hidden" name="uses_ai_shopping" id="uses_ai_shopping" value="" class="hidden-input">
       </div>
 
       <div class="question-block">
-        <div class="question-label">6. Como você avalia seu nível de familiaridade com IA?</div>
+        <div class="question-label">
+          {% if lang == 'en' %}6. How would you rate your familiarity with AI?{% else %}6. Como você avalia seu nível de familiaridade com IA?{% endif %}
+        </div>
         <div class="option-group">
-          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'nenhuma')">Nenhuma</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'pouca')">Pouca</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'moderada')">Moderada</button>
-          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'alta')">Alta</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'nenhuma')">{% if lang == 'en' %}None{% else %}Nenhuma{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'pouca')">{% if lang == 'en' %}Low{% else %}Pouca{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'moderada')">{% if lang == 'en' %}Moderate{% else %}Moderada{% endif %}</button>
+          <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'alta')">{% if lang == 'en' %}High{% else %}Alta{% endif %}</button>
         </div>
         <input type="hidden" name="ai_familiarity" id="ai_familiarity" value="" class="hidden-input">
       </div>
@@ -168,7 +194,7 @@
 
     <div class="submit-wrap fade-up delay-3">
       <button type="submit" class="btn btn-primary" id="submitBtn">
-        Enviar Respostas
+        {% if lang == 'en' %}Submit Responses{% else %}Enviar Respostas{% endif %}
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
