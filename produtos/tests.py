@@ -33,7 +33,7 @@ class RecommendationTests(TestCase):
 			price_tier=price_tier,
 		)
 
-	def test_mesmo_catalogo_e_mesmo_tipo_pontua_mais_que_cross_catalogo(self):
+	def test_nao_recomenda_produtos_do_mesmo_catalogo(self):
 		catalogo_a = self._create_catalogue('A', 'a')
 		catalogo_b = self._create_catalogue('B', 'b')
 
@@ -63,12 +63,14 @@ class RecommendationTests(TestCase):
 		)
 
 		recs = get_recommendations(base.id, top_n=10)
-		score_map = {item['id']: item['score'] for item in recs}
+		rec_ids = {item['id'] for item in recs}
 
-		self.assertGreater(score_map[same_catalog_same_type.id], score_map[cross_catalog.id])
+		self.assertNotIn(same_catalog_same_type.id, rec_ids)
+		self.assertIn(cross_catalog.id, rec_ids)
 
 	def test_mesma_marca_pontua_mais_que_marca_diferente_no_mesmo_tier(self):
 		catalogo = self._create_catalogue('A', 'a')
+		catalogo_b = self._create_catalogue('B', 'b')
 
 		base = self._create_product(
 			catalogue=catalogo,
@@ -79,7 +81,7 @@ class RecommendationTests(TestCase):
 			price_tier='mid',
 		)
 		mesma_marca = self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Teclado Mesma Marca',
 			price='360.00',
 			brand='logitech',
@@ -87,7 +89,7 @@ class RecommendationTests(TestCase):
 			price_tier='mid',
 		)
 		marca_diferente = self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Teclado Outra Marca',
 			price='355.00',
 			brand='Razer',
@@ -102,6 +104,7 @@ class RecommendationTests(TestCase):
 
 	def test_mesmo_price_tier_pontua_mais_que_tier_distante(self):
 		catalogo = self._create_catalogue('A', 'a')
+		catalogo_b = self._create_catalogue('B', 'b')
 
 		base = self._create_product(
 			catalogue=catalogo,
@@ -112,7 +115,7 @@ class RecommendationTests(TestCase):
 			price_tier='premium',
 		)
 		mesmo_tier = self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Monitor Premium',
 			price='1900.00',
 			brand='Asus',
@@ -120,7 +123,7 @@ class RecommendationTests(TestCase):
 			price_tier='premium',
 		)
 		tier_distante = self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Monitor Budget',
 			price='320.00',
 			brand='Asus',
@@ -135,6 +138,7 @@ class RecommendationTests(TestCase):
 
 	def test_endpoint_recommend_retorna_top_n_com_id_e_score(self):
 		catalogo = self._create_catalogue('A', 'a')
+		catalogo_b = self._create_catalogue('B', 'b')
 
 		base = self._create_product(
 			catalogue=catalogo,
@@ -145,7 +149,7 @@ class RecommendationTests(TestCase):
 			price_tier='mid',
 		)
 		self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Headset 1',
 			price='430.00',
 			brand='HyperX',
@@ -153,7 +157,7 @@ class RecommendationTests(TestCase):
 			price_tier='mid',
 		)
 		self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Headset 2',
 			price='700.00',
 			brand='Razer',
@@ -161,7 +165,7 @@ class RecommendationTests(TestCase):
 			price_tier='premium',
 		)
 		self._create_product(
-			catalogue=catalogo,
+			catalogue=catalogo_b,
 			name='Headset 3',
 			price='180.00',
 			brand='Sony',

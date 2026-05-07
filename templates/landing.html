@@ -155,16 +155,16 @@
 
   <div class="hero-cta">
     <a href="{% url 'select_interest' %}" class="btn btn-primary">
-      {% if lang == 'en' %}Join the Study{% else %}Participar da Pesquisa{% endif %}
+      {% if lang == 'en' %}Participate in the Study{% else %}Participar da Pesquisa{% endif %}
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
 
   <div class="disclaimer">
     {% if lang == 'en' %}
-      <strong>About this study:</strong> You will browse a technology catalogue and receive two AI-generated recommendations — one robotic and one humanized. We ask you to evaluate which feels more useful or trustworthy. Your responses are fully anonymous and used only for academic purposes.
+      <strong>About this study:</strong> You will browse a technology catalogue and choose products you are interested in, after which you will receive two recommendations — one robotic and one humanized. We ask you to evaluate which feels more useful or trustworthy. Your responses are fully anonymous and used only for academic purposes.
     {% else %}
-      <strong>Sobre esta pesquisa:</strong> Você verá um catálogo de produtos tecnológicos e receberá duas recomendações geradas por IA — uma robótica e uma humanizada. Pedimos que avalie qual lhe pareceu mais útil ou confiável. Suas respostas são completamente anônimas e serão usadas exclusivamente para fins acadêmicos.
+      <strong>Sobre esta pesquisa:</strong> Você vai navegar em um catálogo de tecnologia e escolher produtos que você está interessado, após o que você receberá duas recomendações - um robótico e um humanizado. Pedimos que você avalie qual parece mais útil ou confiável. Suas respostas são totalmente anônimas e usadas apenas para fins acadêmicos.
     {% endif %}
   </div>
 </div>

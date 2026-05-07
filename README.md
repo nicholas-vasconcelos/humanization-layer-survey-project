@@ -1,7 +1,9 @@
 # Humanizing Choice - Anthropomorphic AI in Recommendations
 
 **Academic research project — IBMEC Rio de Janeiro, 2026**
-Supervised by Prof. Rigel Fernandes
+Class: AI in Business
+Professor: Rigel Fernandes
+Students: Nicholas Vasconcelos, Adam Bleiel, Gauthier Morin
 
 🌐 **Live app:** [humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com](http://humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com/)
 
@@ -11,7 +13,7 @@ Supervised by Prof. Rigel Fernandes
 
 *Humanizing Choice* is a web application built to support the academic paper **"Humanizing Choice — Anthropomorphic AI in Recommendations"**. The study investigates how anthropomorphic prompt engineering influences trust, purchase intent, and perceived understanding among technology university students.
 
-Participants browse a product catalogue, select items of interest, and are then shown two AI-generated recommendations side by side — one robotic and one humanized — before completing a short survey. All data is collected anonymously.
+Participants browse a product catalogue, select items of interest, and are then shown two recommendations side by side — one robotic (rule-based, no AI) and one humanized (AI-generated) — before completing a short survey. All data is collected anonymously.
 
 ---
 
@@ -29,7 +31,7 @@ The core contribution is a **five-component humanization prompt framework**:
 
 Each component is grounded in referenced theoretical constructs (Mariani et al. 2022, Beyari & Hashem 2025, Ribeiro et al. 2025, Srivastava & Gurme 2026, Moussawi et al. 2021, Kim et al. 2019, Kumar et al. 2025).
 
-The experiment produces two outputs from the same product input — a robotic, rule-based recommendation and a humanized recommendation (via a single Groq LLM call) — and measures user preference across four dimensions: overall preference, trust, purchase intention, and feeling understood.
+The experiment produces two outputs from the same product input — a robotic, rule-based recommendation and a humanized recommendation generated with a single Groq LLM call — and measures user preference across four dimensions: overall preference, trust, purchase intention, and feeling understood.
 
 ---
 
@@ -41,8 +43,8 @@ Landing → Select Interest → Product Catalogue → Recommendations (Robotic/H
 
 1. **Landing** — explains the research context; collects no data yet.
 2. **Select Interest** — four technology areas (Dev, Gaming, Productivity, Audio).
-3. **Catalogue** — user taps products they find interesting.
-4. **Recommendations** — two outputs rendered side by side with a 5-second forced reading delay before the preference buttons appear.
+3. **Catalogue** — user taps products they find interesting (18 items shown in random order, filled from other catalogues if needed).
+4. **Recommendations** — two outputs rendered side by side (robotic rule-based vs humanized AI), with a 5-second forced reading delay before the preference buttons appear.
 5. **Survey** — six tap-only questions (four comparison + two profile).
 6. **Thank You** — reveals the research design, including which output was robotic and which was humanized.
 
@@ -106,7 +108,7 @@ Represents one of the four interest areas. Fields: `name`, `slug`, `description`
 Belongs to a `Catalogue`. Fields: `name`, `description`, `price`, `image_url`, `featured`, `brand`, `item_type`, `price_tier`.
 
 ### `SessionResponse`
-One row per completed survey. Fields: `session_id` (UUID), `interest_selected`, `products_selected` (JSON), `robotic_output`, `humanized_output`, `preferred_overall`, `preferred_trust`, `preferred_purchase`, `preferred_understood`, `uses_ai_shopping`, `ai_familiarity`, `timestamp`.
+One row per completed survey. Fields: `session_id` (UUID), `interest_selected`, `products_selected` (JSON), `robotic_output`, `humanized_output`, `preferred_overall`, `preferred_trust`, `preferred_purchase`, `preferred_understood`, `uses_ai_shopping`, `ai_familiarity`, `participant_email`, `timestamp`.
 
 ---
 
@@ -118,7 +120,7 @@ One row per completed survey. Fields: `session_id` (UUID), `interest_selected`, 
 - **Brand score** (35%) — exact brand match
 - **Price tier score** (25%) — same tier = 1.0, adjacent = 0.5, distant = 0.0
 
-Results are aggregated across all selected products and the top candidates are injected into the LLM prompt.
+Results are aggregated across all selected products and the top candidates are injected into the LLM prompt. Recommendations exclude any selected products and are limited to items outside the selected catalogue.
 
 ---
 
@@ -161,7 +163,9 @@ python manage.py runserver
 # Humanizing Choice - Anthropomorphic AI in Recommendations
 
 **Projeto de pesquisa acadêmica — IBMEC Rio de Janeiro, 2026**
-Orientador: Prof. Rigel Fernandes
+Disciplina: AI in Business
+Professor: Rigel Fernandes
+Alunos: Nicholas Vasconcelos, Adam Bleiel, Gauthier Morin
 
 🌐 **App em produção:** [humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com](http://humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com/)
 
@@ -171,7 +175,7 @@ Orientador: Prof. Rigel Fernandes
 
 *Humanizing Choice* é uma aplicação web desenvolvida para apoiar o artigo acadêmico **"Humanizing Choice — Anthropomorphic AI in Recommendations"**. O estudo investiga como a engenharia de prompts antropomórficos influencia confiança, intenção de compra e percepção de compreensão em estudantes universitários de tecnologia.
 
-Os participantes navegam por um catálogo de produtos, selecionam itens de interesse e, em seguida, visualizam duas recomendações geradas por IA lado a lado — uma robótica, outra humanizada — antes de responder uma pesquisa rápida. Todos os dados são coletados de forma anônima.
+Os participantes navegam por um catálogo de produtos, selecionam itens de interesse e, em seguida, visualizam duas recomendações lado a lado — uma robótica (baseada em regras, sem IA) e outra humanizada (gerada por IA) — antes de responder uma pesquisa rápida. Todos os dados são coletados de forma anônima.
 
 ---
 
@@ -189,7 +193,7 @@ A principal contribuição é um **framework de humanização com cinco componen
 
 Cada componente é fundamentado em construtos teóricos referenciados (Mariani et al. 2022, Beyari & Hashem 2025, Ribeiro et al. 2025, Srivastava & Gurme 2026, Moussawi et al. 2021, Kim et al. 2019, Kumar et al. 2025).
 
-O experimento produz dois outputs a partir do mesmo input de produtos — uma recomendação robótica (baseada em regras) e uma recomendação humanizada (via uma única chamada ao LLM Groq) — e mede a preferência do usuário em quatro dimensões: preferência geral, confiança, intenção de compra e sentir-se compreendido.
+O experimento produz dois outputs a partir do mesmo input de produtos — uma recomendação robótica (baseada em regras) e uma recomendação humanizada gerada com uma única chamada ao LLM Groq — e mede a preferência do usuário em quatro dimensões: preferência geral, confiança, intenção de compra e sentir-se compreendido.
 
 ---
 
@@ -201,8 +205,8 @@ Landing → Selecionar Interesse → Catálogo → Recomendações (Robótica/Hu
 
 1. **Landing** — explica o contexto da pesquisa; nenhum dado é coletado ainda.
 2. **Selecionar Interesse** — quatro áreas de tecnologia (Dev, Games, Produtividade, Áudio).
-3. **Catálogo** — o participante toca nos produtos que lhe interessam.
-4. **Recomendações** — dois outputs renderizados lado a lado, com delay forçado de 5 segundos antes dos botões de preferência aparecerem.
+3. **Catálogo** — o participante toca nos produtos que lhe interessam (18 itens em ordem aleatória, completados com outros catálogos quando necessário).
+4. **Recomendações** — dois outputs renderizados lado a lado (robótica baseada em regras vs humanizada por IA), com delay forçado de 5 segundos antes dos botões de preferência aparecerem.
 5. **Pesquisa** — seis perguntas de toque (quatro comparativas + dois de perfil).
 6. **Obrigado** — revela o design da pesquisa, incluindo qual output era robótico e qual era humanizado.
 
@@ -266,7 +270,7 @@ Representa uma das quatro áreas de interesse. Campos: `name`, `slug`, `descript
 Pertence a um `Catalogue`. Campos: `name`, `description`, `price`, `image_url`, `featured`, `brand`, `item_type`, `price_tier`.
 
 ### `SessionResponse`
-Um registro por pesquisa concluída. Campos: `session_id` (UUID), `interest_selected`, `products_selected` (JSON), `robotic_output`, `humanized_output`, `preferred_overall`, `preferred_trust`, `preferred_purchase`, `preferred_understood`, `uses_ai_shopping`, `ai_familiarity`, `timestamp`.
+Um registro por pesquisa concluída. Campos: `session_id` (UUID), `interest_selected`, `products_selected` (JSON), `robotic_output`, `humanized_output`, `preferred_overall`, `preferred_trust`, `preferred_purchase`, `preferred_understood`, `uses_ai_shopping`, `ai_familiarity`, `participant_email`, `timestamp`.
 
 ---
 
@@ -278,7 +282,7 @@ Um registro por pesquisa concluída. Campos: `session_id` (UUID), `interest_sele
 - **Score de marca** (35%) — correspondência exata de marca
 - **Score de faixa de preço** (25%) — mesma faixa = 1,0 | adjacente = 0,5 | distante = 0,0
 
-Os resultados são agregados para todos os produtos selecionados e os melhores candidatos são injetados no prompt do LLM.
+Os resultados são agregados para todos os produtos selecionados e os melhores candidatos são injetados no prompt do LLM. As recomendações excluem produtos selecionados e ficam restritas a itens fora do catálogo escolhido.
 
 ---
 

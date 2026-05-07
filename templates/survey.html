@@ -67,6 +67,29 @@
   background: rgba(var(--accent2-rgb), 0.08);
 }
 
+.input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(var(--accent2-rgb), 0.6);
+  box-shadow: 0 0 0 3px rgba(var(--accent2-rgb), 0.15);
+  background: var(--surface2);
+}
+
 .hidden-input { display: none; }
 
 .submit-wrap { margin-top: 2rem; }
@@ -93,6 +116,7 @@
     <div class="eyebrow">
       {% if lang == 'en' %}Step 4 of 4 · Final step{% else %}Passo 4 de 4 · Última etapa{% endif %}
     </div>
+
     <h2>{% if lang == 'en' %}Your Evaluation{% else %}Sua Avaliação{% endif %}</h2>
     <p>
       {% if lang == 'en' %}
@@ -189,6 +213,30 @@
           <button type="button" class="option-btn" onclick="pick(this, 'ai_familiarity', 'alta')">{% if lang == 'en' %}High{% else %}Alta{% endif %}</button>
         </div>
         <input type="hidden" name="ai_familiarity" id="ai_familiarity" value="" class="hidden-input">
+      </div>
+    </div>
+
+        <div class="survey-section fade-up delay-2">
+      <div class="section-title">
+        {% if lang == 'en' %}Optional{% else %}Opcional{% endif %}
+      </div>
+
+      <div class="question-block">
+        <div class="question-label">
+          {% if lang == 'en' %}
+            7. Leave your email to be notified when the study is published
+          {% else %}
+            7. Deixe seu e-mail para receber aviso quando o estudo for publicado
+          {% endif %}
+        </div>
+        <input
+          type="email"
+          name="participant_email"
+          id="participant_email"
+          placeholder="{% if lang == 'en' %}you@example.com{% else %}voce@exemplo.com{% endif %}"
+          autocomplete="email"
+          class="input"
+        >
       </div>
     </div>
 

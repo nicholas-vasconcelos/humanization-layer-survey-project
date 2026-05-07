@@ -72,6 +72,7 @@ class SessionResponse(models.Model):
     preferred_understood = models.CharField(max_length=1, choices=AB_CHOICES)
     uses_ai_shopping     = models.CharField(max_length=20, choices=USES_AI_CHOICES)
     ai_familiarity       = models.CharField(max_length=20, choices=AI_FAMILIARITY_CHOICES)
+    participant_email    = models.EmailField(blank=True, default='')
 
     timestamp = models.DateTimeField(auto_now_add=True)
 

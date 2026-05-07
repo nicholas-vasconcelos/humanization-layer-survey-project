@@ -96,9 +96,21 @@ def _type_score(base_type: str, candidate_type: str, type_group_map: dict[str, s
     return 0.0
 
 
-def get_recommendations(product_id: int, top_n: int = 5) -> list[dict]:
+def get_recommendations(
+    product_id: int,
+    top_n: int = 5,
+    *,
+    exclude_ids: set[int] | list[int] | None = None,
+    exclude_catalogue_id: int | None = None,
+) -> list[dict]:
     base_product = Product.objects.get(id=product_id)
     candidates = Product.objects.select_related('catalogue').exclude(id=product_id)
+    if exclude_catalogue_id is None:
+        exclude_catalogue_id = base_product.catalogue_id
+    if exclude_catalogue_id is not None:
+        candidates = candidates.exclude(catalogue_id=exclude_catalogue_id)
+    if exclude_ids:
+        candidates = candidates.exclude(id__in=set(exclude_ids))
 
     type_group_map = _type_to_groups()
     results: list[dict] = []

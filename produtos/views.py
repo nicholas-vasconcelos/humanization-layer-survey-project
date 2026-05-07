@@ -121,12 +121,17 @@ def build_ranked_candidates(selected_products, catalogue_obj, top_n=8):
     aggregated = {}
 
     for product in selected_products:
-        product_recommendations = get_recommendations(product_id=product.id, top_n=12)
+        product_recommendations = get_recommendations(
+            product_id=product.id,
+            top_n=12,
+            exclude_ids=selected_ids,
+            exclude_catalogue_id=catalogue_obj.id,
+        )
         for candidate in product_recommendations:
             candidate_id = candidate.get('id')
             if not candidate_id or candidate_id in selected_ids:
                 continue
-            if candidate.get('catalogue_id') != catalogue_obj.id:
+            if candidate.get('catalogue_id') == catalogue_obj.id:
                 continue
 
             if candidate_id not in aggregated:
@@ -404,7 +409,16 @@ def catalogue(request):
         return redirect('select_interest')
 
     catalogue_obj = get_object_or_404(Catalogue, slug=slug)
-    products = catalogue_obj.products.all()
+    primary_products = list(catalogue_obj.products.order_by('?'))
+    if len(primary_products) >= 18:
+        products = primary_products[:18]
+    else:
+        needed = 18 - len(primary_products)
+        filler_products = list(
+            Product.objects.exclude(catalogue=catalogue_obj)
+            .order_by('?')[:needed]
+        )
+        products = primary_products + filler_products
 
     return render(request, 'catalogue.html', with_lang(request, {
         'catalogue': catalogue_obj,
@@ -495,7 +509,7 @@ def recommendations(request):
 
     selected_ids = {product.id for product in selected_products}
     candidate_pool = list(
-        Product.objects.filter(catalogue=catalogue_obj)
+        Product.objects.exclude(catalogue=catalogue_obj)
         .exclude(id__in=selected_ids)
         .order_by('-featured', 'name')
     )
@@ -518,7 +532,7 @@ def recommendations(request):
         robotic_allowed_products.append(product)
 
     if not robotic_allowed_products:
-        robotic_allowed_products = selected_products[:]
+        robotic_allowed_products = []
 
     top_humanized_ids = [candidate['id'] for candidate in ranked_candidates[:3]]
     top_humanized_map = {
@@ -535,7 +549,7 @@ def recommendations(request):
         already_ids = {product.id for product in humanized_card_products}
         selected_ids = {product.id for product in selected_products}
 
-        fallback_products = Product.objects.filter(
+        fallback_products = Product.objects.exclude(
             catalogue=catalogue_obj,
         ).exclude(
             id__in=already_ids.union(selected_ids),
@@ -547,18 +561,7 @@ def recommendations(request):
             humanized_card_products.append(product)
             already_ids.add(product.id)
 
-        if len(humanized_card_products) < 3:
-            selected_fill = (
-                Product.objects.filter(id__in=selected_ids)
-                .order_by('-featured', 'name')
-            )
-            for product in selected_fill:
-                if len(humanized_card_products) >= 3:
-                    break
-                if product.id in already_ids:
-                    continue
-                humanized_card_products.append(product)
-                already_ids.add(product.id)
+
 
     robotic_products_payload = [
         {
@@ -566,7 +569,7 @@ def recommendations(request):
             'price': product.price,
             'image_url': product.image_url,
         }
-        for product in Product.objects.filter(catalogue=catalogue_obj)
+        for product in Product.objects.exclude(catalogue=catalogue_obj)
     ]
 
     humanized_prompt = HUMANIZED_PROMPT_EN if lang == 'en' else HUMANIZED_PROMPT_PT
@@ -635,6 +638,7 @@ def survey(request):
             preferred_understood = request.POST.get('preferred_understood', ''),
             uses_ai_shopping     = request.POST.get('uses_ai_shopping',     ''),
             ai_familiarity       = request.POST.get('ai_familiarity',       ''),
+            participant_email    = request.POST.get('participant_email',    '').strip(),
         )
 
         save_to_supabase({
@@ -649,6 +653,7 @@ def survey(request):
             'preferred_understood': response_obj.preferred_understood,
             'uses_ai_shopping': response_obj.uses_ai_shopping,
             'ai_familiarity': response_obj.ai_familiarity,
+            'participant_email': response_obj.participant_email,
             'timestamp': response_obj.timestamp.isoformat(),
         })
 
