@@ -1,9 +1,14 @@
 # Humanizing Choice - Anthropomorphic AI in Recommendations
 
 **Academic research project — IBMEC Rio de Janeiro, 2026**
-Class: AI in Business
-Professor: Rigel Fernandes
+
 Students: Nicholas Vasconcelos, Adam Bleiel, Gauthier Morin
+
+Professor: Rigel Fernandes
+
+Class: AI in Business
+
+---
 
 🌐 **Live app:** [humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com](http://humanizing-catalogue-survey-env.eba-kg3w4fxe.us-east-1.elasticbeanstalk.com/)
 
