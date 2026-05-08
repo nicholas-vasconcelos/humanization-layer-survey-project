@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load from environment in production; fallback only for local dev
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
-    'django-insecure-local-dev-key-replace-in-production'
+    ''
 )
  
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
@@ -135,9 +135,9 @@ MEDIA_URL  = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
  
 # ── External API keys (loaded from environment) ───────────────────────────────
-GROQ_API_KEY      = os.environ.get('GROQ_API_KEY', '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')
-SUPABASE_URL      = os.environ.get('SUPABASE_URL', 'https://bwnjurilchuzpexivdsd.supabase.co')
-SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bmp1cmlsY2h1enBleGl2ZHNkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODAyMzM5NSwiZXhwIjoyMDkzNTk5Mzk1fQ.FRC_G0_YzTfzh9sAq5i90iaLZrbgZE4PoHhDxTfW05o')
+GROQ_API_KEY      = os.environ.get('GROQ_API_KEY', '')
+SUPABASE_URL      = os.environ.get('SUPABASE_URL', '')
+SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
  
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
