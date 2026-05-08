@@ -4,7 +4,7 @@ import unicodedata
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, viewsets
@@ -45,28 +45,65 @@ def with_lang(request, context=None):
 
 
 HUMANIZED_PROMPT_EN = """You are Maya, a friendly shopping assistant helping a university tech student.
-Structure your response using exactly these components in order:
-1. [Persona] — introduce yourself warmly by name
-2. [Empathy Phrase] — acknowledge what the user has been browsing
-3. [Recommendation] — suggest 3 products naturally in flowing text
-4. [Social Proof] — mention that other students with similar interests liked these
-5. [Call to Action] — close with a soft open-ended invitation
-Do not use headers or labels. Write in short, conversational paragraphs.
-Keep it concise: 4 to 6 short sentences, with a maximum of 90 words total.
-Respond entirely in English.
+Use the provided catalogue and selected products to form your recommendations.
+Write exactly five lines, one per item, in this order:
+Persona Name (Social Presence), Empathy Phrase (Perceived Warmth), Recommendation (Functional Value), Social Proof (Information-Seeking/UGT), Call to Action (Customer Engagement).
+Do NOT include numbering, bullets, or labels. Just the five lines of content.
+Do not add extra text before or after the five lines.
+Keep it concise and natural. Respond entirely in English.
+
+Example format (do not copy the content, only the structure of five plain lines):
+Hi, I'm Maya, your shopping assistant today.
+I can see you've been exploring options for your setup and studying needs.
+I recommend [Product A], [Product B], and [Product C] because they match your priorities.
+Other students with similar interests have been happy with these picks.
+Would you like me to help you choose which one fits you best?
 """
 
 HUMANIZED_PROMPT_PT = """Voce e a Maya, uma assistente de compras amigavel que ajuda um estudante universitario de tecnologia.
-Estruture sua resposta usando exatamente estes componentes nesta ordem:
-1. [Persona] — apresente-se calorosamente pelo nome
-2. [Frase de Empatia] — reconheca o que o usuario esteve explorando
-3. [Recomendacao] — sugira 3 produtos de forma natural em texto fluido
-4. [Prova Social] — mencione que outros estudantes com interesses semelhantes gostaram dessas opcoes
-5. [Chamada a Acao] — encerre com um convite aberto e suave
-Nao use titulos nem rotulos. Escreva em paragrafos curtos e conversacionais.
-Seja concisa: 4 a 6 frases curtas, com no maximo 90 palavras no total.
-Responda inteiramente em portugues brasileiro.
+Use o catalogo e os produtos selecionados fornecidos para formar suas recomendacoes.
+Escreva exatamente cinco linhas, uma por item, nesta ordem:
+Nome da Persona (Presenca Social), Frase de Empatia (Calor Percebido), Recomendacao (Valor Funcional), Prova Social (Busca de Informacao/UGT), Chamada a Acao (Engajamento do Cliente).
+Nao inclua numeracao, marcadores ou rotulos. Apenas as cinco linhas de conteudo.
+Nao adicione texto antes ou depois das cinco linhas.
+Seja concisa e natural. Responda inteiramente em portugues brasileiro.
+
+Exemplo de formato (nao copie o conteudo, apenas a estrutura de cinco linhas simples):
+Oi, eu sou a Maya, sua assistente de compras hoje.
+Vejo que voce explorou opcoes para seu setup e estudos.
+Eu recomendo [Produto A], [Produto B] e [Produto C] porque combinam com o que voce busca.
+Outros estudantes com interesses parecidos ficaram satisfeitos com essas escolhas.
+Quer que eu te ajude a decidir qual combina melhor com voce?
 """
+
+
+def validate_humanized_output(text, lang):
+    if not text:
+        return False
+
+    lines = [line.strip() for line in text.strip().splitlines() if line.strip()]
+    if len(lines) != 5:
+        return False
+
+    disallowed_tokens = (
+        'persona',
+        'empathy phrase',
+        'recommendation',
+        'social proof',
+        'call to action',
+        'frase de empatia',
+        'recomendacao',
+        'prova social',
+        'chamada a acao',
+    )
+
+    for line in lines:
+        lower = line.lower()
+        if lower.startswith(tuple(str(i) for i in range(1, 6))):
+            return False
+        if any(token in lower for token in disallowed_tokens):
+            return False
+    return True
 
 
 class ProdutoViewSet(viewsets.ReadOnlyModelViewSet):
@@ -274,6 +311,11 @@ def all_products_mentioned(raw_text, products, lang):
     return all(normalize_name(get_product_name(product, lang)) in normalized_text for product in products)
 
 
+def any_products_mentioned(raw_text, products, lang):
+    normalized_text = normalize_name(raw_text)
+    return any(normalize_name(get_product_name(product, lang)) in normalized_text for product in products)
+
+
 def build_humanized_consistent_output(products, lang):
     if not products:
         if lang == 'en':
@@ -321,8 +363,8 @@ def build_humanized_consistent_output(products, lang):
 def call_groq(system_prompt, user_content):
     api_key = getattr(settings, 'GROQ_API_KEY', '')
     if not api_key:
-        logger.warning('GROQ_API_KEY não configurada; retornando fallback.')
-        return 'Não foi possível gerar recomendações no momento.'
+        logger.warning('GROQ_API_KEY não configurada; Groq indisponível.')
+        return None
 
     try:
         from groq import Groq
@@ -339,7 +381,7 @@ def call_groq(system_prompt, user_content):
         return chat_completion.choices[0].message.content.strip()
     except Exception as exc:
         logger.error('Falha ao chamar Groq: %s', exc)
-        return 'Não foi possível gerar recomendações no momento.'
+        return None
 
 
 def save_to_supabase(data):
@@ -454,12 +496,8 @@ def save_selection(request):
         ids = body.get('product_ids', [])
         if not ids:
             return JsonResponse({'error': 'Nenhum produto selecionado.'}, status=400)
-        # Validate that the IDs belong to the correct catalogue
-        slug = request.session.get('interest_slug')
         valid_ids = list(
-            Product.objects.filter(
-                id__in=ids, catalogue__slug=slug
-            ).values_list('id', flat=True)
+            Product.objects.filter(id__in=ids).values_list('id', flat=True)
         )
         if not valid_ids:
             return JsonResponse({'error': 'Produtos inválidos.'}, status=400)
@@ -485,9 +523,7 @@ def recommendations(request):
         return redirect('select_interest')
 
     catalogue_obj = get_object_or_404(Catalogue, slug=slug)
-    selected_products = list(
-        Product.objects.filter(id__in=ids, catalogue=catalogue_obj)
-    )
+    selected_products = list(Product.objects.filter(id__in=ids))
     if not selected_products:
         from django.shortcuts import redirect
         return redirect('catalogue')
@@ -546,20 +582,7 @@ def recommendations(request):
     ]
 
     if len(humanized_card_products) < 3:
-        already_ids = {product.id for product in humanized_card_products}
-        selected_ids = {product.id for product in selected_products}
-
-        fallback_products = Product.objects.exclude(
-            catalogue=catalogue_obj,
-        ).exclude(
-            id__in=already_ids.union(selected_ids),
-        ).order_by('-featured', 'name')[:3]
-
-        for product in fallback_products:
-            if len(humanized_card_products) >= 3:
-                break
-            humanized_card_products.append(product)
-            already_ids.add(product.id)
+        return render(request, 'humanized_unavailable.html', with_lang(request), status=503)
 
 
 
@@ -573,20 +596,22 @@ def recommendations(request):
     ]
 
     humanized_prompt = HUMANIZED_PROMPT_EN if lang == 'en' else HUMANIZED_PROMPT_PT
-    humanized_output_raw = call_groq(humanized_prompt, user_content)
-    robotic_output = build_robotic_output(robotic_allowed_products, lang)
-
-    humanized_card_products = select_products_for_humanized_output(
-        humanized_output_raw,
-        preferred_products=humanized_card_products,
-        fallback_products=robotic_allowed_products,
-        top_n=3,
-        lang=lang,
+    recommended_names = [get_product_name(product, lang) for product in humanized_card_products]
+    selected_names = [get_product_name(product, lang) for product in selected_products]
+    recommendations_hint = "\n".join(f"- {name}" for name in recommended_names)
+    humanized_user_content = (
+        f"{user_content}\n\n"
+        f"Recommended products to include (use exactly these names):\n{recommendations_hint}"
     )
-    if all_products_mentioned(humanized_output_raw, humanized_card_products, lang):
-        humanized_output = humanized_output_raw
-    else:
-        humanized_output = build_humanized_consistent_output(humanized_card_products, lang)
+    humanized_output_raw = call_groq(humanized_prompt, humanized_user_content)
+    if (
+        not validate_humanized_output(humanized_output_raw, lang)
+        or not all_products_mentioned(humanized_output_raw, humanized_card_products, lang)
+        or any_products_mentioned(humanized_output_raw, selected_products, lang)
+    ):
+        return render(request, 'humanized_unavailable.html', with_lang(request), status=503)
+    robotic_output = build_robotic_output(robotic_allowed_products, lang)
+    humanized_output = humanized_output_raw
 
     humanized_products_payload = [
         {

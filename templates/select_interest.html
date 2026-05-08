@@ -127,9 +127,9 @@
   </div>
 
   <div class="interest-grid">
-    <a href="{% url 'catalogue' %}?slug=programacao-desenvolvimento"
+     <a href="{% url 'catalogue' %}?slug=programacao-desenvolvimento"
        class="interest-card card-dev fade-up delay-1"
-       onclick="setInterest('programacao-desenvolvimento')">
+       data-slug="programacao-desenvolvimento">
       <span class="card-icon">💻</span>
       <h3>{% if lang == 'en' %}Programming & Development{% else %}Programação & Desenvolvimento{% endif %}</h3>
       <p>
@@ -144,9 +144,9 @@
       </div>
     </a>
 
-    <a href="{% url 'catalogue' %}?slug=games-performance"
+     <a href="{% url 'catalogue' %}?slug=games-performance"
        class="interest-card card-games fade-up delay-2"
-       onclick="setInterest('games-performance')">
+       data-slug="games-performance">
       <span class="card-icon">🎮</span>
       <h3>{% if lang == 'en' %}Gaming & Performance{% else %}Games & Performance{% endif %}</h3>
       <p>
@@ -161,9 +161,9 @@
       </div>
     </a>
 
-    <a href="{% url 'catalogue' %}?slug=produtividade-estudos"
+     <a href="{% url 'catalogue' %}?slug=produtividade-estudos"
        class="interest-card card-study fade-up delay-3"
-       onclick="setInterest('produtividade-estudos')">
+       data-slug="produtividade-estudos">
       <span class="card-icon">📚</span>
       <h3>{% if lang == 'en' %}Productivity & Study{% else %}Produtividade & Estudos{% endif %}</h3>
       <p>
@@ -178,9 +178,9 @@
       </div>
     </a>
 
-    <a href="{% url 'catalogue' %}?slug=audio-comunicacao"
+     <a href="{% url 'catalogue' %}?slug=audio-comunicacao"
        class="interest-card card-audio fade-up delay-4"
-       onclick="setInterest('audio-comunicacao')">
+       data-slug="audio-comunicacao">
       <span class="card-icon">🎧</span>
       <h3>{% if lang == 'en' %}Audio & Communication{% else %}Áudio & Comunicação{% endif %}</h3>
       <p>
@@ -195,6 +195,10 @@
       </div>
     </a>
   </div>
+
+<form id="csrfForm" method="post" action="#" style="display:none;">
+  {% csrf_token %}
+</form>
 </div>
 
 <script>
@@ -203,18 +207,22 @@
     sessionStorage.setItem('interest_slug', slug);
   }
 
+  const csrfTokenInput = document.querySelector('#csrfForm input[name="csrfmiddlewaretoken"]');
+
   // Also handle the POST submission via the Django view
   document.querySelectorAll('.interest-card').forEach(card => {
     card.addEventListener('click', function(e) {
       e.preventDefault();
-      const slug = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+      const slug = this.dataset.slug;
+      if (!slug || !csrfTokenInput) return;
+      setInterest(slug);
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = "{% url 'select_interest' %}";
       const csrf = document.createElement('input');
       csrf.type = 'hidden';
       csrf.name = 'csrfmiddlewaretoken';
-      csrf.value = '{{ csrf_token }}';
+      csrf.value = csrfTokenInput.value;
       const slugInput = document.createElement('input');
       slugInput.type = 'hidden';
       slugInput.name = 'slug';

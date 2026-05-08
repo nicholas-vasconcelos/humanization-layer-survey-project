@@ -741,27 +741,15 @@
     loading.style.display = 'none';
     body.innerHTML = '';
 
-    const compactText = text
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    const sentenceParts = (compactText.match(/[^.!?]+[.!?]?/g) || [compactText])
-      .map(chunk => chunk.trim())
+    const lines = text
+      .split(/\r?\n/)
+      .map(line => line.trim())
       .filter(Boolean)
       .slice(0, 5);
 
-    const paragraphs = sentenceParts.length ? sentenceParts : [compactText];
+    const bubbles = lines.length ? lines : [text.trim()];
 
-    if (!paragraphs.length) {
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble';
-      bubble.textContent = text;
-      bubble.style.animationDelay = '0ms';
-      body.appendChild(bubble);
-      return;
-    }
-
-    paragraphs.forEach((paragraph, index) => {
+    bubbles.forEach((paragraph, index) => {
       const bubble = document.createElement('div');
       bubble.className = 'chat-bubble';
       bubble.textContent = paragraph;
@@ -776,7 +764,7 @@
       humanizedProducts.slice(0, 3).forEach((product, index) => {
         const card = document.createElement('div');
         card.className = 'chat-product-card';
-        card.style.animationDelay = `${(paragraphs.length * CHAT_BUBBLE_STAGGER_MS) + (index * 120)}ms`;
+        card.style.animationDelay = `${(bubbles.length * CHAT_BUBBLE_STAGGER_MS) + (index * 120)}ms`;
 
         const image = document.createElement('img');
         image.className = 'chat-product-image';
