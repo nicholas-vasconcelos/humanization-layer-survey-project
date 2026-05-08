@@ -14,6 +14,11 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost,http://127.0.0.1'
+).split(',')
+
 # ── Application definition ────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +51,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.csrf',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -72,8 +78,9 @@ else:
 
 # ── Sessions ──────────────────────────────────────────────────────────────────
 # Use database-backed sessions to persist flow data across requests
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 3600  # 1 hour — enough for one research session
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_AGE = 3600
+SESSION_COOKIE_HTTPONLY = True
 
 # ── Password validation ───────────────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,6 +109,12 @@ SUPABASE_URL      = os.environ.get('SUPABASE_URL', 'https://bwnjurilchuzpexivdsd
 SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bmp1cmlsY2h1enBleGl2ZHNkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODAyMzM5NSwiZXhwIjoyMDkzNTk5Mzk1fQ.FRC_G0_YzTfzh9sAq5i90iaLZrbgZE4PoHhDxTfW05o')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ── Security settings for mobile production (override in development) ─────────────────
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 # In settings.py, add temporarily for debug:
 import logging
